@@ -2,12 +2,13 @@ import { useUser } from '../context/UserContext';
 import { useData } from '../context/DataContext';
 import { generateSmartPlan, getDailyWorkout } from '../utils/workoutData';
 import { CheckCircle2, Flame, Droplets, Moon, Coffee, Dumbbell, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '../utils/cn';
 
 export default function Dashboard() {
-    const { profile, calculateBMR } = useUser();
-    const { getDataForDate, toggleWorkoutComplete } = useData();
+    const { profile, calculateBMR, calculateBMI } = useUser();
+    const { getDataForDate, toggleWorkoutComplete, setSelectedDate } = useData();
+    const navigate = useNavigate();
 
     const today = new Date();
     const todayData = getDataForDate(today);
@@ -30,18 +31,12 @@ export default function Dashboard() {
     }
 
     const bmr = calculateBMR();
+    const bmi = calculateBMI(); // Use if needed, or just for plan generation
     const plan = generateSmartPlan(
         profile.workoutDays,
-        calculateBMR().toString(), // Using BMR as dummy BMI access filler if needed, or fix logic. Actually passing bmiCategory string logic
-        (profile.goal as any) || 'general'
+        bmi.category,
+        profile.goal || 'general'
     );
-    // Note: recalculating plan properly would require refactoring, assuming plan structure stable.
-
-    // Correct plan generation call with mocked BMI category if useUser doesn't export it directly or calculate it here
-    // In previous code calculateBMI was available.
-
-    // Let's assume calculateBMI is not exported or re-implement it briefly or check useUser
-    // Checking file content history... calculateBMI was exported. I will re-add it.
 
     const dailyWorkout = getDailyWorkout(plan, today);
     const totalCalories = todayData.meals.reduce((acc, curr) => acc + curr.calories, 0);
@@ -77,26 +72,38 @@ export default function Dashboard() {
                         const isToday = today.getDay() === dayIndex;
                         const dayWorkout = plan.schedule.find(s => s.day === dayIndex);
 
+                        // Calculate date for this dayIndex relative to today
+                        // We want to show the current week. 
+                        // If today is Wednesday (3), we want Sunday (0) to Saturday (6) of THIS week.
+                        // Date of Sunday = Today - TodayDayIndex
+                        const diff = today.getDay() - dayIndex;
+                        const date = new Date(today);
+                        date.setDate(today.getDate() - diff);
+
                         return (
-                            <div
+                            <button
                                 key={dayIndex}
+                                onClick={() => {
+                                    setSelectedDate(date);
+                                    navigate('/schedule');
+                                }}
                                 className={cn(
                                     "flex flex-col items-center justify-center min-w-[3.5rem] h-20 rounded-2xl border snap-center transition-all",
                                     isToday
                                         ? "bg-primary text-white border-primary shadow-lg shadow-primary/25 scale-105"
-                                        : "bg-surface border-border text-text-muted"
+                                        : "bg-surface border-border text-text-muted hover:bg-surfaceHighlight"
                                 )}
                             >
                                 <span className="text-xs font-medium opacity-80">{DAYS_TH_SHORT[dayIndex]}</span>
                                 {dayWorkout ? (
                                     <div className="mt-1 flex flex-col items-center">
-                                        <span className="text-lg font-bold">{today.getDate() - today.getDay() + dayIndex}</span>
+                                        <span className="text-lg font-bold">{date.getDate()}</span>
                                         <span className="w-1.5 h-1.5 rounded-full bg-white mt-1"></span>
                                     </div>
                                 ) : (
                                     <span className="text-lg font-bold mt-1 opacity-50">-</span>
                                 )}
-                            </div>
+                            </button>
                         );
                     })}
                 </div>
@@ -191,7 +198,7 @@ export default function Dashboard() {
                             <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500">
                                 {totalCalories}
                             </span>
-                            <span className="text-xs text-text-muted">/ {Math.round(bmr * 1.2)}</span>
+                            <span className="text-xs text-text-muted">/ {profile.calorieGoal || Math.round(bmr * 1.2)}</span>
                         </div>
                     </div>
                     <div className="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500">

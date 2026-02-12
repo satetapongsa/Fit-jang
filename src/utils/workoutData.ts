@@ -4,12 +4,14 @@ import type { Plan, DailyWorkout, Exercise } from './types';
 const IMG_BASE = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises";
 
 // --- THAI TRANSLATIONS MAP ---
+// --- THAI TRANSLATIONS MAP ---
 const THAI_NAMES: Record<string, string> = {
     // Basic & Bodyweight
     'Squats': 'สควอท (Squats)',
     'Squat': 'สควอท (Squat)',
     'Bodyweight Squats': 'ลุกนั่งตัวเปล่า (Bodyweight Squats)',
     'Goblet Squats': 'สควอทถือดัมเบล (Goblet Squats)',
+    'Sumo Squats': 'ซูโม่สควอท (Sumo Squats)',
     'Push-ups': 'วิดพื้น (Push-ups)',
     'Lunges': 'เดินย่อเข่า (Lunges)',
     'Stationary Lunges': 'ย่อเข่าอยู่กับที่ (Lunges)',
@@ -52,11 +54,14 @@ const THAI_NAMES: Record<string, string> = {
     'Pull-ups/Lat Pulldown': 'ดึงข้อหรือดึงสายเคเบิล',
     'Face Pulls': 'ดึงเชือกเข้าหาหน้า (Face Pulls)',
     'Lateral Raises': 'กางแขนด้านข้าง (Lateral Raises)',
+    'Front Raises': 'ยกแขนด้านหน้า (Front Raises)',
+    'Rear Delt Fly': 'กางแขนด้านหลัง (Rear Delt Fly)',
     'Leg Press': 'ดันขา (Leg Press)',
     'Leg Curls': 'พับขา (Leg Curls)',
     'Leg Extensions': 'เตะขา (Leg Extensions)',
     'Calf Raises': 'เขย่งน่อง (Calf Raises)',
     'Cable Flyes': 'เคเบิลฟลาย (Cable Flyes)',
+    'Chest Fly': 'เชสต์ฟลาย (Chest Fly)',
     'Tricep Pushdowns': 'กดแขนหลัง (Tricep Pushdowns)',
     'Skullcrushers': 'นอนดันคานงอศอก (Skullcrushers)',
     'Bicep Curls': 'ยกดัมเบลหน้าแขน (Bicep Curls)',
@@ -88,39 +93,46 @@ const EXERCISE_DESCRIPTIONS: Record<string, string> = {
     'Squat': 'ยืนกางขาเท่าไหล่ ย่อตัวลงเหมือนนั่งเก้าอี้ น้ำหนักลงส้นเท้า หลังตรง ดันตัวขึ้น',
     'Bodyweight Squats': 'ยืนกางขาเท่าไหล่ มือประสานอก ย่อตัวลงจนต้นขาขนานพื้น แล้วยืนขึ้น',
     'Goblet Squats': 'ถือดัมเบลชิดอก ย่อตัวลงศอกอยู่ด้านในเข่า หลังตรง ยืนขึ้น',
+    'Sumo Squats': 'ยืนกางขากว้างกว่าไหล่ ปลายเท้าชี้ออก ย่อตัวลง หลังตรง ให้ความรู้สึกตึงที่ขาหนีบ',
     'Front Squats': 'วางบาร์เบลบนไหล่หน้า ศอกชี้ขึ้น ย่อตัวลงตัวตรงที่สุดเท่าที่ทำได้',
+    'Front Squats/Leg Press': 'เลือกทำท่า Front Squat หรือ Leg Press ตามอุปกรณ์ที่มี',
     'Lunges': 'ก้าวขาไปข้างหน้า ย่อตัวลงจนเข่าหลังเกือบแตะพื้น ตัวตรง ดันกลับท่าเริ่มต้น ทำสลับข้าง',
     'Stationary Lunges': 'ยืนก้าวขาค้างไว้ ย่อตัวขึ้นลงโดยไม่ขยับเท้า',
     'Leg Press': 'นั่งบนเครื่อง วางเท้ากว้างเท่าไหล่ ดันน้ำหนักออกแต่ไม่ต้องล็อคเข่า ค่อยๆ ผ่อนกลับ',
     'Leg Extensions': 'นั่งบนเครื่อง สอดเท้าใต้เบาะ เตะขาขึ้นจนเหยียดตรง เกร็งหน้าขา',
-    'Leg Curls': 'นอนคว่ำ ส้นเท้าเกี่ยวเบาะ พับขาเข้ามาหาก้น เกร็งต้นขาด้านหลัง',
+    'Leg Curls': 'นอนคว่ำหรือนั่ง ส้นเท้าเกี่ยวเบาะ พับขาเข้ามาหาก้น เกร็งต้นขาด้านหลัง',
     'Calf Raises': 'ยืนปลายเท้าบนแท่น เขย่งส้นเท้าขึ้นสุด ค้างไว้ 1 วินาที แล้วลดลงช้าๆ',
     'Glute Bridges': 'นอนหงายชันเข่า ยกสะโพกขึ้นจนตัวเป็นเส้นตรง เกร็งก้น ค้างไว้เล็กน้อย',
     'Donkey Kicks': 'คุกเข่า มือกวางพื้น เตะขาไปด้านหลังและดันขึ้นบน เกร็งก้น',
-    'Sumo Squats': 'ยืนกางขากว้างกว่าไหล่ ปลายเท้าชี้ออก ย่อตัวลง หลังตรง',
     'Romanian Deadlifts': 'ยืนถือบาร์หรือดัมเบล พับสะโพกไปด้านหลัง ก้มตัวลงหลังตรง เข่างอเล็กน้อย รู้สึกตึงขาหลัง แล้วดึงกลับ',
     'RDLs': 'ยืนถือบาร์ พับก้นไปด้านหลัง ก้มตัวลงหลังตรง ให้รู้สึกตึงต้นขาหลัง',
 
     // Chest
     'Push-ups': 'นอนคว่ำ มือวางกว้างกว่าไหล่เล็กน้อย ดันตัวขึ้น ลำตัวเป็นเส้นตรง ลดตัวลงจนอกเกือบติดพื้น',
     'Bench Press': 'นอนราบ ตาอยู่ใต้บาร์ จับบาร์กว้างกว่าไหล่ ยกบาร์ออก ลดบาร์ลงมาที่กลางอก ดันขึ้น',
+    'Bench': 'นอนราบ ตาอยู่ใต้บาร์ จับบาร์กว้างกว่าไหล่ ยกบาร์ออก ลดบาร์ลงมาที่กลางอก ดันขึ้น',
     'Incline Dumbbell Press': 'นอนเบาะเอียง 30-45 องศา ดันดัมเบลขึ้นตรงๆ ลดลงมาช้าๆ',
     'Incline DB Press': 'นอนเบาะเอียง ดันดัมเบลขึ้นเหนืออก ลดลงให้ศอกทำมุม 45 องศา',
     'Cable Flyes': 'ยืนตรงกลางเคเบิล ดึงมือมาประกบกันด้านหน้า บีบอก แล้วผ่อนกลับช้าๆ',
     'Dips': 'จับบาร์คู่ ยืดแขนตึง พับศอกลดตัวลง โน้มตัวมาข้างหน้าเล็กน้อย แล้วดันขึ้น',
-    'DB Press': 'นอนราบ ดันดัมเบลขึ้นตรงๆ',
+    'DB Press': 'นอนราบ ดันดัมเบลขึ้นตรงๆ จากระดับอก',
     'Chest Fly': 'นอนราบ ถือดัมเบล กางแขนออกเหมือนกอดต้นไม้ แล้วหุบเข้าหากัน',
 
     // Back
     'Pull-ups': 'จับบาร์กว้างกว่าไหล่ ดึงตัวขึ้นจนคางพ้นบาร์ บีบหลัง ลดตัวลงสุดแขน',
     'Chin-ups': 'จับบาร์หงายมือ ดึงตัวขึ้นจนคางพ้นบาร์ เน้นหลังและหน้าแขน',
     'Lat Pulldown': 'นั่งล็อคขา จับบาร์กว้าง แอ่นอก ดึงบาร์ลงมาที่หน้าอก บีบสะบัก',
+    'Lat Pulldowns': 'นั่งล็อคขา จับบาร์กว้าง แอ่นอก ดึงบาร์ลงมาที่หน้าอก บีบสะบัก',
+    'Pull-ups/Lat Pulldown': 'เลือกทำท่า Pull-ups หรือ Lat Pulldown ตามความแข็งแรง',
     'Rows': 'โน้มตัวไปข้างหน้า ดึงน้ำหนักเข้าหาเอว บีบหลัง',
+    'Row': 'โน้มตัวไปข้างหน้า ดึงน้ำหนักเข้าหาเอว บีบหลัง',
     'Bent Over Rows': 'ยืนแยกขา ก้มตัวหลังตรง ดึงบาร์เข้าหาช่วงท้อง บีบสะบัก',
     'Barbell Rows': 'ก้มตัวหลังขนานพื้น ดึงบาร์เบลเข้าหาท้องน้อย',
+    'Barbell Row': 'ก้มตัวหลังขนานพื้น ดึงบาร์เบลเข้าหาท้องน้อย',
     'Dumbbell Rows': 'มือวางบนม้านั่ง ดึงดัมเบลขึ้นมาข้างเอว ศอกแนบเลาตัว',
     'Cable Rows': 'นั่งดึงเคเบิลเข้าหาท้อง ยืดหลังตรง บีบสะบักตอนดึงเข้า',
     'Deadlifts': 'ยืนชิดบาร์ ย่อตัวจับบาร์ แขนตึง ดันขาถีบพื้น ยืดตัวขึ้นพร้อมดันสะโพก',
+    'Deadlift': 'ยืนชิดบาร์ ย่อตัวจับบาร์ แขนตึง ดันขาถีบพื้น ยืดตัวขึ้นพร้อมดันสะโพก',
     'Face Pulls': 'ดึงเชือกเข้าหาหน้าผาก กางศอกออก บีบไหล่หลัง',
     'Bird Dog': 'คุกเข่าเข่าและมือ ยกแขนซ้ายขาขวาเหยียดตรง สลับข้าง',
     'Superman': 'นอนคว่ำ ยกแขนและขาขึ้นพร้อมกัน เกร็งหลัง',
@@ -167,6 +179,7 @@ const EXERCISE_IMAGE_MAP: Record<string, string> = {
     'Squat': 'Bodyweight_Squat',
     'Bodyweight Squats': 'Bodyweight_Squat',
     'Goblet Squats': 'Goblet_Squat_with_dumbell',
+    'Sumo Squats': 'Sumo_Squat',
     'Push-ups': 'Push_Up',
     'Lunges': 'Bodyweight_Lunge',
     'Stationary Lunges': 'Bodyweight_Lunge',
@@ -187,7 +200,7 @@ const EXERCISE_IMAGE_MAP: Record<string, string> = {
     'Dead Bugs': 'Dead_Bug',
     'Bird Dog': 'Bird_Dog',
     'Donkey Kicks': 'Glute_Kickback',
-    'Sumo Squats': 'Sumo_Squat',
+    'Superman': 'Superman',
 
     // Weights / Gym
     'Bench Press': 'Barbell_Bench_Press_-_Medium_Grip',
@@ -209,11 +222,14 @@ const EXERCISE_IMAGE_MAP: Record<string, string> = {
     'Pull-ups/Lat Pulldown': 'Front_Lat_Pulldown',
     'Face Pulls': 'Face_Pull',
     'Lateral Raises': 'Side_Lateral_Raise',
+    'Front Raises': 'Dumbbell_Front_Raise',
+    'Rear Delt Fly': 'Dumbbell_Rear_Lateral_Raise',
     'Leg Press': 'Leg_Press',
     'Leg Curls': 'Lying_Leg_Curl',
     'Leg Extensions': 'Leg_Extension',
     'Calf Raises': 'Standing_Calf_Raise',
     'Cable Flyes': 'Cable_Crossover',
+    'Chest Fly': 'Dumbbell_Fly',
     'Tricep Pushdowns': 'Pushdown',
     'Barbell Curls': 'Barbell_Curl',
     'Bicep Curls': 'Dumbbell_Bicep_Curl',
@@ -229,10 +245,10 @@ const EXERCISE_IMAGE_MAP: Record<string, string> = {
     'Box Jumps': 'Box_Jump',
 
     // Cardio / Stretch / Yoga
-    'Yoga Flow': 'Yoga_Ra_Jao_Sun_Salutation', // Fallback to a yoga image
-    'Stretching': 'Adductor_Stretching', // Fallback generic stretch
-    'Sprint Intervals': 'Run', // Needs fallback or check if Run exists, often Trail_Running or similar. 
-    'Light Jog': 'Jogging', // Often High_Knees or similar if generic not found. Let's use 'High_Knees' as fallback.
+    'Yoga Flow': 'Yoga_Ra_Jao_Sun_Salutation',
+    'Stretching': 'Adductor_Stretching',
+    'Sprint Intervals': 'Run',
+    'Light Jog': 'Jogging',
 };
 
 const getThaiName = (engName: string) => THAI_NAMES[engName] || engName;

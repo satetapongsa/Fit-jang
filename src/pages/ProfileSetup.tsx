@@ -22,6 +22,7 @@ export default function ProfileSetup() {
         bodyFat: profile?.bodyFat?.toString() || '',
         sugarLevel: profile?.sugarLevel?.toString() || '',
         waterGoal: profile?.waterGoal?.toString() || '3000',
+        calorieGoal: profile?.calorieGoal?.toString() || '2500',
         goal: profile?.goal || 'general',
     });
 
@@ -38,6 +39,7 @@ export default function ProfileSetup() {
             bodyFat: formData.bodyFat ? Number(formData.bodyFat) : undefined,
             sugarLevel: formData.sugarLevel ? Number(formData.sugarLevel) : undefined,
             waterGoal: Number(formData.waterGoal),
+            calorieGoal: Number(formData.calorieGoal),
             goal: formData.goal as any,
         });
         navigate('/dashboard');
@@ -142,6 +144,16 @@ export default function ProfileSetup() {
                             value={formData.waterGoal}
                             onChange={(e) => setFormData({ ...formData, waterGoal: e.target.value })}
                             placeholder="3000"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-text-muted">Daily Calorie Goal (kcal)</label>
+                        <Input
+                            type="number"
+                            value={formData.calorieGoal}
+                            onChange={(e) => setFormData({ ...formData, calorieGoal: e.target.value })}
+                            placeholder="2500"
                         />
                     </div>
 
