@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import Calendar from 'react-calendar';
-import { Card } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { Plus, Trash2, Utensils, GlassWater, Moon, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
+import { Plus, Trash2, Utensils, GlassWater, Moon, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { useData } from '../context/DataContext';
 import { useUser } from '../context/UserContext';
@@ -18,10 +15,10 @@ export default function Tracker() {
 
     const currentData = getDataForDate(selectedDate);
     const waterGoal = profile?.waterGoal || 3000;
+    const calorieGoal = profile?.calorieGoal || 2500;
 
     // Local state for forms
     const [newMeal, setNewMeal] = useState({ name: '', calories: '' });
-    const [customWater, setCustomWater] = useState('');
     const [sleepTimes, setSleepTimes] = useState({
         start: currentData.sleepStart || '23:00',
         end: currentData.sleepEnd || '07:00'
@@ -57,19 +54,6 @@ export default function Tracker() {
         setNewMeal({ name: '', calories: '' });
     };
 
-    const handleCustomWater = (e: React.FormEvent) => {
-        e.preventDefault();
-        const amount = Number(customWater);
-        if (amount && amount > 0) {
-            // Convert ml to "units" (approx 250ml per glass for internal counter, or just track ML directly)
-            // For simplicity, we stick to the existing context which tracks "units". 
-            // Let's assume the context *actually* tracks units where 1 unit = 250ml.
-            // To support exact ML, we'd need to refactor context to store total ML.
-            // HACK: For now, we update by (amount / 250)
-            updateWater(selectedDate, amount / 250);
-            setCustomWater('');
-        }
-    };
 
     const handleSleepUpdate = () => {
         const duration = calculateSleepDuration(sleepTimes.start, sleepTimes.end);
@@ -87,33 +71,23 @@ export default function Tracker() {
     const currentWaterMl = Math.round(currentData.waterIntake * 250);
 
     return (
-        <div className="p-6 max-w-4xl mx-auto space-y-6 animate-fade-in pb-24">
-            {/* Date Navigation Header */}
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                <h1 className="text-3xl font-bold">Daily Tracker</h1>
+        <div className="p-5 space-y-6 animate-fade-in pb-32">
+            {/* Header */}
+            <header className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-teal-400">
+                    Daily Tracker
+                </h1>
 
-                <div className="flex items-center gap-2 bg-surfaceHighlight p-1 rounded-lg relative">
-                    <Button variant="ghost" size="sm" onClick={() => shiftDate(-1)}>
-                        <ChevronLeft className="w-4 h-4" />
-                    </Button>
-
-                    <button
-                        onClick={() => setShowCalendar(!showCalendar)}
-                        className="flex items-center gap-2 px-4 py-2 hover:bg-surface rounded-md transition-colors min-w-[150px] justify-center"
-                    >
-                        <CalendarIcon className="w-4 h-4 text-primary" />
-                        <span className="font-medium">
-                            {selectedDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                        </span>
+                <div className="flex items-center gap-1 bg-surfaceHighlight/50 p-1 rounded-xl backdrop-blur-md">
+                    <button onClick={() => shiftDate(-1)} className="p-2 hover:bg-white/10 rounded-lg text-primary transition-colors"><ChevronLeft size={16} /></button>
+                    <button onClick={() => setShowCalendar(!showCalendar)} className="text-sm font-medium px-2 py-1 min-w-[80px] text-center">
+                        {selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </button>
-
-                    <Button variant="ghost" size="sm" onClick={() => shiftDate(1)}>
-                        <ChevronRight className="w-4 h-4" />
-                    </Button>
+                    <button onClick={() => shiftDate(1)} className="p-2 hover:bg-white/10 rounded-lg text-primary transition-colors"><ChevronRight size={16} /></button>
 
                     {/* Popover Calendar */}
                     {showCalendar && (
-                        <div className="absolute top-full right-0 mt-2 z-50 bg-surface border border-border p-4 rounded-xl shadow-xl w-[300px]">
+                        <div className="absolute top-14 right-4 z-50 glass-card p-4 rounded-2xl animate-fade-in">
                             <Calendar
                                 onChange={(d) => {
                                     if (d instanceof Date) {
@@ -122,17 +96,17 @@ export default function Tracker() {
                                     }
                                 }}
                                 value={selectedDate}
-                                className="react-calendar-dark text-sm"
+                                className="react-calendar-dark text-sm border-none bg-transparent"
                             />
                         </div>
                     )}
                 </div>
-            </div>
+            </header>
 
             {/* Tabs */}
-            <div className="flex p-1 space-x-1 bg-surfaceHighlight rounded-xl">
+            <div className="flex p-1 bg-surfaceHighlight/30 rounded-2xl backdrop-blur-md relative overflow-hidden">
                 {[
-                    { id: 'food', icon: Utensils, label: 'Nutrition' },
+                    { id: 'food', icon: Utensils, label: 'Food' },
                     { id: 'water', icon: GlassWater, label: 'Water' },
                     { id: 'sleep', icon: Moon, label: 'Sleep' },
                 ].map((tab) => (
@@ -140,163 +114,185 @@ export default function Tracker() {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id as any)}
                         className={cn(
-                            "flex-1 flex items-center justify-center py-2.5 text-sm font-medium rounded-lg transition-all",
+                            "flex-1 flex flex-col items-center justify-center py-3 text-xs font-bold rounded-xl transition-all relative z-10",
                             activeTab === tab.id
-                                ? "bg-primary text-primary-foreground shadow-sm"
-                                : "text-text-muted hover:text-text hover:bg-surface"
+                                ? "bg-primary text-white shadow-lg shadow-primary/25 translate-y-[-2px]"
+                                : "text-text-muted hover:text-white"
                         )}
                     >
-                        <tab.icon className="w-4 h-4 mr-2" />
+                        <tab.icon className={cn("w-5 h-5 mb-1", activeTab === tab.id ? "text-white" : "text-text-muted")} />
                         {tab.label}
                     </button>
                 ))}
             </div>
 
-            {/* Content */}
-            <Card className="min-h-[400px]">
+            {/* Content Area */}
+            <div className="animate-slide-up">
                 {activeTab === 'food' && (
                     <div className="space-y-6">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-semibold">Meals</h2>
+                        {/* Summary Card */}
+                        <div className="glass-card rounded-3xl p-6 relative overflow-hidden">
+                            <div className="absolute -right-4 -top-4 opacity-10 pointer-events-none">
+                                <Utensils size={120} />
+                            </div>
+
+                            <div className="relative z-10 text-center space-y-2">
+                                <p className="text-sm text-text-muted font-bold uppercase tracking-wider">Calories Absorbed</p>
+                                <div className="flex items-center justify-center gap-2">
+                                    <span className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-orange-400 to-red-500">
+                                        {totalCalories}
+                                    </span>
+                                    <span className="text-sm text-text-muted mt-4">/ {calorieGoal} kcal</span>
+                                </div>
+
+                                <div className="w-full h-3 bg-surfaceHighlight rounded-full mt-4 overflow-hidden relative">
+                                    <div
+                                        className="h-full bg-gradient-to-r from-orange-400 to-red-500 rounded-full transition-all duration-1000 ease-out"
+                                        style={{ width: `${Math.min((totalCalories / calorieGoal) * 100, 100)}%` }}
+                                    />
+                                </div>
+                            </div>
                         </div>
 
                         {/* Add Meal Form */}
-                        <form onSubmit={handleAddMeal} className="flex gap-2 items-end">
-                            <Input
-                                placeholder="Meal Name"
-                                value={newMeal.name}
-                                onChange={e => setNewMeal({ ...newMeal, name: e.target.value })}
-                            />
-                            <Input
-                                placeholder="Calories"
-                                type="number"
-                                value={newMeal.calories}
-                                onChange={e => setNewMeal({ ...newMeal, calories: e.target.value })}
-                            />
-                            <Button type="submit" size="sm" className="mb-[2px] h-11">
-                                <Plus className="w-4 h-4" />
-                            </Button>
-                        </form>
-
-                        <div className="space-y-3 max-h-[300px] overflow-y-auto">
-                            {currentData.meals.map((meal) => (
-                                <div key={meal.id} className="flex justify-between items-center p-3 bg-background rounded-lg border border-border">
-                                    <div>
-                                        <p className="font-medium">{meal.name}</p>
-                                        <p className="text-sm text-text-muted">{meal.time}</p>
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        <span className="font-bold text-primary">{meal.calories} kcal</span>
-                                        <button
-                                            onClick={() => removeMeal(selectedDate, meal.id)}
-                                            className="text-text-muted hover:text-red-500 transition-colors"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
-                                    </div>
+                        <div className="glass p-4 rounded-2xl space-y-3">
+                            <h3 className="font-bold text-sm text-white flex items-center gap-2"><Plus size={16} className="text-primary" /> Add Meal</h3>
+                            <form onSubmit={handleAddMeal} className="flex gap-2">
+                                <div className="flex-1 space-y-2">
+                                    <input
+                                        className="w-full bg-surfaceHighlight/50 border border-white/5 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-text-muted/50"
+                                        placeholder="Meal Name (e.g., Chicken Rice)"
+                                        value={newMeal.name}
+                                        onChange={e => setNewMeal({ ...newMeal, name: e.target.value })}
+                                    />
+                                    <input
+                                        className="w-full bg-surfaceHighlight/50 border border-white/5 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-text-muted/50"
+                                        placeholder="Calories (e.g., 500)"
+                                        type="number"
+                                        value={newMeal.calories}
+                                        onChange={e => setNewMeal({ ...newMeal, calories: e.target.value })}
+                                    />
                                 </div>
-                            ))}
-                            {currentData.meals.length === 0 && (
-                                <p className="text-center text-text-muted py-8">No meals logged for this day.</p>
-                            )}
+                                <button type="submit" className="bg-primary text-white rounded-xl px-4 font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform flex items-center justify-center">
+                                    <Plus size={24} />
+                                </button>
+                            </form>
                         </div>
 
-                        <div className="pt-4 border-t border-border mt-auto">
-                            <div className="flex justify-between items-center">
-                                <span className="text-text-muted">Total Calories</span>
-                                <span className="text-2xl font-bold">{totalCalories} <span className="text-sm text-text-muted">/ 2500</span></span>
-                            </div>
-                            <div className="w-full h-2 bg-surfaceHighlight rounded-full mt-2 overflow-hidden">
-                                <div
-                                    className="h-full bg-primary transition-all duration-500"
-                                    style={{ width: `${Math.min((totalCalories / 2500) * 100, 100)}%` }}
-                                />
-                            </div>
+                        {/* Recent Meals */}
+                        <div className="space-y-3">
+                            <h3 className="font-bold text-sm text-text-muted uppercase tracking-wider px-2">Recent Log</h3>
+                            {currentData.meals.length > 0 ? (
+                                currentData.meals.map((meal) => (
+                                    <div key={meal.id} className="flex items-center justify-between p-4 rounded-2xl bg-surface border border-white/5 hover:border-primary/20 transition-colors group">
+                                        <div className="flex items-start gap-3">
+                                            <div className="p-2 bg-orange-500/10 rounded-lg text-orange-500 mt-1">
+                                                <Utensils size={16} />
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-white">{meal.name}</p>
+                                                <p className="text-xs text-text-muted">{meal.time}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <span className="font-bold text-orange-400">{meal.calories}</span>
+                                            <button onClick={() => removeMeal(selectedDate, meal.id)} className="text-text-muted hover:text-red-500 p-2 rounded-full hover:bg-white/5 transition-colors">
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-center py-8 text-text-muted text-sm border border-dashed border-white/10 rounded-2xl">
+                                    No meals logged today
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
 
                 {activeTab === 'water' && (
-                    <div className="flex flex-col items-center justify-center space-y-8 py-8 animate-fade-in w-full">
-                        <div className="relative group cursor-pointer" onClick={() => updateWater(selectedDate, 1)}>
-                            <GlassWater size={120} className={cn("transition-colors duration-300", currentWaterMl >= waterGoal ? "text-blue-500" : "text-blue-500/50")} />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <span className="text-2xl font-bold text-text drop-shadow-md">{(currentWaterMl / waterGoal * 100).toFixed(0)}%</span>
+                    <div className="space-y-8 py-4">
+                        <div className="relative group cursor-pointer flex justify-center" onClick={() => updateWater(selectedDate, 1)}>
+                            <div className="relative z-10">
+                                <GlassWater size={180} className={cn("transition-all duration-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]", currentWaterMl >= waterGoal ? "text-blue-500" : "text-blue-500/50")} />
+                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                    <span className="text-3xl font-bold text-white drop-shadow-md">{(currentWaterMl / waterGoal * 100).toFixed(0)}%</span>
+                                    <p className="text-xs text-blue-200 mt-1 font-bold tracking-widest">HYDRATED</p>
+                                </div>
                             </div>
                         </div>
 
                         <div className="text-center space-y-2">
-                            <h2 className="text-4xl font-bold">{currentWaterMl} ml</h2>
+                            <h2 className="text-5xl font-bold text-white">{currentWaterMl} <span className="text-lg text-text-muted font-medium">ml</span></h2>
                             <p className="text-text-muted">Goal: {waterGoal} ml</p>
                         </div>
 
-                        <div className="flex gap-4 w-full justify-center">
-                            <Button variant="outline" onClick={() => updateWater(selectedDate, -1)} disabled={currentWaterMl <= 0}>
+                        <div className="grid grid-cols-2 gap-4">
+                            <button onClick={() => updateWater(selectedDate, -1)} disabled={currentWaterMl <= 0} className="py-4 rounded-2xl bg-surfaceHighlight border border-white/5 text-text-muted font-bold hover:bg-surfaceHighlight/80 active:scale-95 transition-all">
                                 - 250ml
-                            </Button>
-                            <Button onClick={() => updateWater(selectedDate, 1)}>
+                            </button>
+                            <button onClick={() => updateWater(selectedDate, 1)} className="py-4 rounded-2xl bg-blue-500 text-white font-bold shadow-lg shadow-blue-500/30 active:scale-95 transition-all">
                                 + 250ml
-                            </Button>
-                        </div>
-
-                        {/* Custom Water Input */}
-                        <div className="w-full max-w-xs pt-4 border-t border-border">
-                            <p className="text-sm text-center text-text-muted mb-2">Add Custom Amount</p>
-                            <form onSubmit={handleCustomWater} className="flex gap-2">
-                                <Input
-                                    placeholder="ml"
-                                    type="number"
-                                    value={customWater}
-                                    onChange={(e) => setCustomWater(e.target.value)}
-                                />
-                                <Button type="submit" size="sm" className="h-11">Add</Button>
-                            </form>
+                            </button>
                         </div>
                     </div>
                 )}
 
                 {activeTab === 'sleep' && (
                     <div className="space-y-6">
-                        <h2 className="text-xl font-semibold">Sleep Cycle</h2>
-
-                        <div className="p-6 bg-indigo-500/10 rounded-xl border border-indigo-500/20 text-center space-y-2">
-                            <Moon className="w-12 h-12 text-indigo-500 mx-auto mb-4" />
-                            <p className="text-4xl font-bold">{currentData.sleepDuration}h</p>
-                            <p className="text-text-muted">
-                                From {currentData.sleepStart || '--:--'} to {currentData.sleepEnd || '--:--'}
-                            </p>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-text-muted">Bedtime</label>
-                                <input
-                                    type="time"
-                                    className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-text focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    value={sleepTimes.start}
-                                    onChange={(e) => setSleepTimes(prev => ({ ...prev, start: e.target.value }))}
-                                />
+                        <div className="p-8 bg-gradient-to-b from-indigo-500/20 to-transparent rounded-3xl border border-indigo-500/30 text-center space-y-4 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/10 via-transparent to-transparent"></div>
+                            <Moon className="w-16 h-16 text-indigo-400 mx-auto drop-shadow-[0_0_15px_rgba(129,140,248,0.6)]" />
+                            <div>
+                                <p className="text-6xl font-bold text-white">{currentData.sleepDuration}<span className="text-xl text-text-muted font-medium ml-1">h</span></p>
+                                <p className="text-indigo-300 text-sm mt-2 font-medium">Auto-calculated duration</p>
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-text-muted">Wake Up</label>
-                                <input
-                                    type="time"
-                                    className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-text focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    value={sleepTimes.end}
-                                    onChange={(e) => setSleepTimes(prev => ({ ...prev, end: e.target.value }))}
-                                />
+                            <div className="flex justify-center gap-8 text-sm pt-4 border-t border-white/5">
+                                <div>
+                                    <p className="text-text-muted mb-1">Bedtime</p>
+                                    <p className="font-bold text-white">{currentData.sleepStart || '--:--'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-text-muted mb-1">Wake Up</p>
+                                    <p className="font-bold text-white">{currentData.sleepEnd || '--:--'}</p>
+                                </div>
                             </div>
                         </div>
 
-                        <Button
-                            className="w-full bg-indigo-600 hover:bg-indigo-700 mt-4"
-                            onClick={handleSleepUpdate}
-                        >
-                            Calculate & Save Sleep Log
-                        </Button>
+                        <div className="glass p-6 rounded-3xl space-y-6">
+                            <h3 className="font-bold text-white">Edit Schedule</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-text-muted uppercase tracking-wider">Bedtime</label>
+                                    <input
+                                        type="time"
+                                        className="w-full bg-surfaceHighlight border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        value={sleepTimes.start}
+                                        onChange={(e) => setSleepTimes(prev => ({ ...prev, start: e.target.value }))}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-text-muted uppercase tracking-wider">Wake Up</label>
+                                    <input
+                                        type="time"
+                                        className="w-full bg-surfaceHighlight border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        value={sleepTimes.end}
+                                        onChange={(e) => setSleepTimes(prev => ({ ...prev, end: e.target.value }))}
+                                    />
+                                </div>
+                            </div>
+
+                            <button
+                                className="w-full py-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-600/30 transition-all active:scale-[0.98]"
+                                onClick={handleSleepUpdate}
+                            >
+                                Update Sleep Log
+                            </button>
+                        </div>
                     </div>
                 )}
-            </Card>
+            </div>
         </div>
     );
 }

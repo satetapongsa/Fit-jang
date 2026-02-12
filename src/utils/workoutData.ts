@@ -1,76 +1,263 @@
 import type { Plan, DailyWorkout, Exercise } from './types';
 
-// Helper to create exercises
-const createExercise = (name: string, sets: number, reps: string): Exercise => ({ name, sets, reps });
+// Image Base URL (using yuhonas/free-exercise-db as source)
+const IMG_BASE = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises";
 
 // --- THAI TRANSLATIONS MAP ---
-// Basic mapping for common exercises
 const THAI_NAMES: Record<string, string> = {
-    // Basic
+    // Basic & Bodyweight
     'Squats': 'สควอท (Squats)',
+    'Squat': 'สควอท (Squat)',
     'Bodyweight Squats': 'ลุกนั่งตัวเปล่า (Bodyweight Squats)',
     'Goblet Squats': 'สควอทถือดัมเบล (Goblet Squats)',
     'Push-ups': 'วิดพื้น (Push-ups)',
-    'Dumbbell Rows': 'ดึงข้อดัมเบล (Dumbbell Rows)',
+    'Lunges': 'เดินย่อเข่า (Lunges)',
     'Stationary Lunges': 'ย่อเข่าอยู่กับที่ (Lunges)',
     'Plank': 'แพลงก์ (Plank)',
-    'Bench Press': 'ดันอกแนวนอน (Bench Press)',
-    'Rows': 'ดึงข้อ (Rows)',
-    'Deadlifts': 'ท่าเดดลิฟท์ (Deadlifts)',
-    'Overhead Press': 'ดันไหล่เหนือศีรษะ (Overhead Press)',
     'Pull-ups': 'ดึงข้อ (Pull-ups)',
-    'Pull-ups/Lat Pulldown': 'ดึงข้อ หรือ ดึงสายเคเบิล (Pull-ups/Lat Pulldown)',
-    'Bent Over Rows': 'ก้มตัวดึงบาร์เบล (Bent Over Rows)',
-    'Lunges': 'เดินย่อเข่า (Lunges)',
-    'Incline Dumbbell Press': 'ดันอกเบาะเอียง (Incline Press)',
-    'Face Pulls': 'ดึงเชือกเข้าหาหน้า (Face Pulls)',
-    'Barbell Row': 'ดึงบาร์เบลเข้าหาตัว (Barbell Row)',
-    'Romanian Deadlifts': 'โรมาเนียน เดดลิฟท์ (RDL)',
-    'Calf Raises': 'เขย่งเน้นน่อง (Calf Raises)',
-    'Lat Pulldown': 'ดึงสายเคเบิลลง (Lat Pulldown)',
-    'Lateral Raises': 'กางแขนด้านข้าง (Lateral Raises)',
-    'Leg Press': 'ดันขาด้วยเครื่อง (Leg Press)',
-    'Leg Curls': 'พับขาด้านหลัง (Leg Curls)',
-    'Cable Flyes': 'เคเบิล ไฟล (Cable Flyes)',
-    'Tricep Pushdowns': 'กดแขนหลัง (Tricep Pushdowns)',
-    'Barbell Curls': 'ยกบาร์เบลหน้าแขน (Barbell Curls)',
-    'Hammer Curls': 'ยกดัมเบลแนวตั้ง (Hammer Curls)',
-    'OHP': 'ดันไหล่ (OHP)',
-    'Tricep Dips': 'ดิปหลังแขน (Tricep Dips)',
-    'RDLs': 'โรมาเนียน เดดลิฟท์ (RDL)',
-    'Incline DB Press': 'ดันอกเบาะเอียง (Incline Press)',
-    'Skullcrushers': 'นอนดันบาร์เหนือหัว (Skullcrushers)',
-    'Cable Rows': 'ดึงสายเคเบิลนั่ง (Cable Rows)',
-    'Front Squats': 'สควอทบาร์ด้านหน้า (Front Squats)',
-    'Front Squats/Leg Press': 'สควอทด้านหน้า หรือ เลกเพรส',
-    'Sprint Intervals': 'วิ่งสลับเดินเร็ว (Sprint Intervals)',
-    'Burpees': 'พุ่งหลัง (Burpees)',
-    'DB Press': 'ดันดัมเบล (DB Press)',
+    'Chin-ups': 'ดึงข้อหงายมือ (Chin-ups)',
     'Dips': 'ดิป (Dips)',
-    'Yoga Flow': 'โยคะยืดเหยียด (Yoga)',
-    'Light Jog': 'จ็อกกิ้งเบาๆ (Light Jog)',
-    'Deadlift': 'เดดลิฟท์ (Deadlift)',
-    'Kettlebell Swings': 'แกว่งตุ้มน้ำหนัก (Kettlebell Swings)',
-    'Box Jumps': 'กระโดดขึ้นกล่อง (Box Jumps)',
-    'Stretching': 'ยืดเหยียดร่างกาย (Stretching)',
-    'Dead Bugs': 'ท่าแมลงตาย (Dead Bugs)',
-    'Bird Dog': 'ท่าเบิร์ดด็อก (Bird Dog)',
+    'Tricep Dips': 'ดิปหลังแขน (Tricep Dips)',
+    'Burpees': 'เบอร์พี (Burpees)',
+    'Mountain Climbers': 'ปีนเขา (Mountain Climbers)',
+    'Jumping Jacks': 'กระโดดตบ (Jumping Jacks)',
+    'Sit-ups': 'ซิทอัพ (Sit-ups)',
+    'Crunch': 'ครันช์ (Crunch)',
+    'Bicycle Crunches': 'จักรยานอากาศ (Bicycle Crunches)',
     'Leg Raises': 'นอนยกขา (Leg Raises)',
-    'Mountain Climbers': 'ท่าปีนเขา (Mountain Climbers)',
     'Russian Twists': 'บิดตัวรัสเซีย (Russian Twists)',
     'Glute Bridges': 'ยกสะโพก (Glute Bridges)',
-    'Donkey Kicks': 'ท่าเตะขาหลัง (Donkey Kicks)',
-    'Sumo Squats': 'ซูโม่สควอท (Sumo Squats)',
-    'Bicycle Crunches': 'จักรยานอากาศ (Bicycle Crunches)',
-    'Sit-ups': 'ลุกนั่ง (Sit-ups)',
-    'Jumping Jacks': 'กระโดดตบ (Jumping Jacks)',
+    'Donkey Kicks': 'เตะขาหลัง (Donkey Kicks)',
+    'Bird Dog': 'เบิร์ดด็อก (Bird Dog)',
+    'Dead Bugs': 'เดดบั๊ก (Dead Bugs)',
+    'Superman': 'ซูเปอร์แมน (Superman)',
+
+    // Weights (Barbell/Dumbbell/Machine)
+    'Bench Press': 'ดันอก (Bench Press)',
+    'Bench': 'ดันอก (Bench Press)',
+    'Dumbbell Rows': 'ดึงข้อดัมเบล (Dumbbell Rows)',
+    'Rows': 'ดึงข้อ (Rows)',
+    'Row': 'ดึงข้อ (Row)',
+    'Bent Over Rows': 'ก้มตัวดึงบาร์เบล (Bent Over Rows)',
+    'Barbell Row': 'ก้มตัวดึงบาร์เบล (Barbell Row)',
+    'Barbell Rows': 'ก้มตัวดึงบาร์เบล (Barbell Rows)',
+    'Deadlifts': 'เดดลิฟท์ (Deadlifts)',
+    'Deadlift': 'เดดลิฟท์ (Deadlift)',
+    'Romanian Deadlifts': 'โรมาเนียน เดดลิฟท์ (RDL)',
+    'RDLs': 'โรมาเนียน เดดลิฟท์ (RDL)',
+    'Overhead Press': 'ดันไหล่ (Overhead Press)',
+    'OHP': 'ดันไหล่ (OHP)',
+    'Lat Pulldown': 'ดึงสายเคเบิลลง (Lat Pulldown)',
+    'Lat Pulldowns': 'ดึงสายเคเบิลลง (Lat Pulldowns)',
+    'Pull-ups/Lat Pulldown': 'ดึงข้อหรือดึงสายเคเบิล',
+    'Face Pulls': 'ดึงเชือกเข้าหาหน้า (Face Pulls)',
+    'Lateral Raises': 'กางแขนด้านข้าง (Lateral Raises)',
+    'Leg Press': 'ดันขา (Leg Press)',
+    'Leg Curls': 'พับขา (Leg Curls)',
+    'Leg Extensions': 'เตะขา (Leg Extensions)',
+    'Calf Raises': 'เขย่งน่อง (Calf Raises)',
+    'Cable Flyes': 'เคเบิลฟลาย (Cable Flyes)',
+    'Tricep Pushdowns': 'กดแขนหลัง (Tricep Pushdowns)',
+    'Skullcrushers': 'นอนดันคานงอศอก (Skullcrushers)',
+    'Bicep Curls': 'ยกดัมเบลหน้าแขน (Bicep Curls)',
+    'Barbell Curls': 'ยกบาร์เบลหน้าแขน (Barbell Curls)',
+    'Hammer Curls': 'ยกดัมเบลแบบค้อน (Hammer Curls)',
+    'Incline Dumbbell Press': 'ดันอกเบาะเอียง (Incline DB Press)',
+    'Incline DB Press': 'ดันอกเบาะเอียง (Incline DB Press)',
+    'DB Press': 'ดันดัมเบล (DB Press)',
+    'Cable Rows': 'ดึงเคเบิลนั่ง (Cable Rows)',
+    'Front Squats': 'สควอทบาร์หน้า (Front Squats)',
+    'Front Squats/Leg Press': 'สควอทบาร์หน้าหรือดันขา',
+    'Kettlebell Swings': 'แกว่งเคตเทิลเบล (KB Swings)',
+    'Box Jumps': 'กระโดดขึ้นกล่อง (Box Jumps)',
+
+    // Cardio / Yoga / Active
+    'Sprint Intervals': 'วิ่งสปีดสลับเดิน (Sprint Intervals)',
+    'Light Jog': 'วิ่งเหยาะๆ (Light Jog)',
+    'Yoga Flow': 'โยคะ (Yoga Flow)',
+    'Stretching': 'ยืดเหยียด (Stretching)',
+};
+
+// Descriptions Map (Thai)
+const EXERCISE_DESCRIPTIONS: Record<string, string> = {
+    // Generic
+    'Generic': 'ทำท่าตามรูปภาพ รักษาฟอร์มให้ถูกต้อง โฟกัสที่กล้ามเนื้อเป้าหมาย หายใจเข้าออกอย่างสม่ำเสมอ',
+
+    // Legs
+    'Squats': 'ยืนกางขาเท่าไหล่ ย่อตัวลงเหมือนนั่งเก้าอี้ น้ำหนักลงส้นเท้า หลังตรง ตามองตรง ดันตัวขึ้นเกร็งก้น',
+    'Squat': 'ยืนกางขาเท่าไหล่ ย่อตัวลงเหมือนนั่งเก้าอี้ น้ำหนักลงส้นเท้า หลังตรง ดันตัวขึ้น',
+    'Bodyweight Squats': 'ยืนกางขาเท่าไหล่ มือประสานอก ย่อตัวลงจนต้นขาขนานพื้น แล้วยืนขึ้น',
+    'Goblet Squats': 'ถือดัมเบลชิดอก ย่อตัวลงศอกอยู่ด้านในเข่า หลังตรง ยืนขึ้น',
+    'Front Squats': 'วางบาร์เบลบนไหล่หน้า ศอกชี้ขึ้น ย่อตัวลงตัวตรงที่สุดเท่าที่ทำได้',
+    'Lunges': 'ก้าวขาไปข้างหน้า ย่อตัวลงจนเข่าหลังเกือบแตะพื้น ตัวตรง ดันกลับท่าเริ่มต้น ทำสลับข้าง',
+    'Stationary Lunges': 'ยืนก้าวขาค้างไว้ ย่อตัวขึ้นลงโดยไม่ขยับเท้า',
+    'Leg Press': 'นั่งบนเครื่อง วางเท้ากว้างเท่าไหล่ ดันน้ำหนักออกแต่ไม่ต้องล็อคเข่า ค่อยๆ ผ่อนกลับ',
+    'Leg Extensions': 'นั่งบนเครื่อง สอดเท้าใต้เบาะ เตะขาขึ้นจนเหยียดตรง เกร็งหน้าขา',
+    'Leg Curls': 'นอนคว่ำ ส้นเท้าเกี่ยวเบาะ พับขาเข้ามาหาก้น เกร็งต้นขาด้านหลัง',
+    'Calf Raises': 'ยืนปลายเท้าบนแท่น เขย่งส้นเท้าขึ้นสุด ค้างไว้ 1 วินาที แล้วลดลงช้าๆ',
+    'Glute Bridges': 'นอนหงายชันเข่า ยกสะโพกขึ้นจนตัวเป็นเส้นตรง เกร็งก้น ค้างไว้เล็กน้อย',
+    'Donkey Kicks': 'คุกเข่า มือกวางพื้น เตะขาไปด้านหลังและดันขึ้นบน เกร็งก้น',
+    'Sumo Squats': 'ยืนกางขากว้างกว่าไหล่ ปลายเท้าชี้ออก ย่อตัวลง หลังตรง',
+    'Romanian Deadlifts': 'ยืนถือบาร์หรือดัมเบล พับสะโพกไปด้านหลัง ก้มตัวลงหลังตรง เข่างอเล็กน้อย รู้สึกตึงขาหลัง แล้วดึงกลับ',
+    'RDLs': 'ยืนถือบาร์ พับก้นไปด้านหลัง ก้มตัวลงหลังตรง ให้รู้สึกตึงต้นขาหลัง',
+
+    // Chest
+    'Push-ups': 'นอนคว่ำ มือวางกว้างกว่าไหล่เล็กน้อย ดันตัวขึ้น ลำตัวเป็นเส้นตรง ลดตัวลงจนอกเกือบติดพื้น',
+    'Bench Press': 'นอนราบ ตาอยู่ใต้บาร์ จับบาร์กว้างกว่าไหล่ ยกบาร์ออก ลดบาร์ลงมาที่กลางอก ดันขึ้น',
+    'Incline Dumbbell Press': 'นอนเบาะเอียง 30-45 องศา ดันดัมเบลขึ้นตรงๆ ลดลงมาช้าๆ',
+    'Incline DB Press': 'นอนเบาะเอียง ดันดัมเบลขึ้นเหนืออก ลดลงให้ศอกทำมุม 45 องศา',
+    'Cable Flyes': 'ยืนตรงกลางเคเบิล ดึงมือมาประกบกันด้านหน้า บีบอก แล้วผ่อนกลับช้าๆ',
+    'Dips': 'จับบาร์คู่ ยืดแขนตึง พับศอกลดตัวลง โน้มตัวมาข้างหน้าเล็กน้อย แล้วดันขึ้น',
+    'DB Press': 'นอนราบ ดันดัมเบลขึ้นตรงๆ',
+    'Chest Fly': 'นอนราบ ถือดัมเบล กางแขนออกเหมือนกอดต้นไม้ แล้วหุบเข้าหากัน',
+
+    // Back
+    'Pull-ups': 'จับบาร์กว้างกว่าไหล่ ดึงตัวขึ้นจนคางพ้นบาร์ บีบหลัง ลดตัวลงสุดแขน',
+    'Chin-ups': 'จับบาร์หงายมือ ดึงตัวขึ้นจนคางพ้นบาร์ เน้นหลังและหน้าแขน',
+    'Lat Pulldown': 'นั่งล็อคขา จับบาร์กว้าง แอ่นอก ดึงบาร์ลงมาที่หน้าอก บีบสะบัก',
+    'Rows': 'โน้มตัวไปข้างหน้า ดึงน้ำหนักเข้าหาเอว บีบหลัง',
+    'Bent Over Rows': 'ยืนแยกขา ก้มตัวหลังตรง ดึงบาร์เข้าหาช่วงท้อง บีบสะบัก',
+    'Barbell Rows': 'ก้มตัวหลังขนานพื้น ดึงบาร์เบลเข้าหาท้องน้อย',
+    'Dumbbell Rows': 'มือวางบนม้านั่ง ดึงดัมเบลขึ้นมาข้างเอว ศอกแนบเลาตัว',
+    'Cable Rows': 'นั่งดึงเคเบิลเข้าหาท้อง ยืดหลังตรง บีบสะบักตอนดึงเข้า',
+    'Deadlifts': 'ยืนชิดบาร์ ย่อตัวจับบาร์ แขนตึง ดันขาถีบพื้น ยืดตัวขึ้นพร้อมดันสะโพก',
+    'Face Pulls': 'ดึงเชือกเข้าหาหน้าผาก กางศอกออก บีบไหล่หลัง',
+    'Bird Dog': 'คุกเข่าเข่าและมือ ยกแขนซ้ายขาขวาเหยียดตรง สลับข้าง',
+    'Superman': 'นอนคว่ำ ยกแขนและขาขึ้นพร้อมกัน เกร็งหลัง',
+
+    // Shoulders
+    'Overhead Press': 'ยืนหรือนั่ง ดันบาร์จากระดับไหปลาร้าขึ้นเหนือศีรษะ เก็บศอก',
+    'OHP': 'ยืนเกร็งท้อง ดันบาร์ขึ้นเหนือศีรษะจนแขนตึง',
+    'Lateral Raises': 'ยืนถือดัมเบล ยกแขนกางออกข้างลำตัว สูงระดับไหล่',
+    'Front Raises': 'ยืนถือดัมเบล ยกแขนขึ้นด้านหน้า สูงระดับสายตา',
+    'Rear Delt Fly': 'ก้มตัว กางแขนออกด้านข้าง เน้นไหล่หลัง',
+
+    // Arms
+    'Bicep Curls': 'ยืนถือดัมเบล ล็อคศอก พับแขนยกดัมเบลขึ้นบีบหน้าแขน',
+    'Barbell Curls': 'ถือบาร์เบล พับแขนยกขึ้น ห้ามโยกตัว',
+    'Hammer Curls': 'ถือดัมเบลหันฝ่ามือเข้าหากัน พับแขนขึ้น',
+    'Tricep Pushdowns': 'ยืนจับบาร์เคเบิล ศอกแนบตัว กดแขนลงจนตึง',
+    'Skullcrushers': 'นอนราบ ยกบาร์ขึ้น พับศอกพาน้ำหนักมาที่หน้าผาก แล้วดันกลับ',
+    'Tricep Dips': 'ใช้ม้านั่งหรือบาร์ วางมือด้านหลัง ย่อตัวลงโดยงอศอก แล้วดันขึ้น',
+
+    // Core
+    'Plank': 'นอนคว่ำ ศอกวางพื้น เกร็งตัวให้ตรง ห้ามก้นโด่งหรือหลังแอ่น',
+    'Sit-ups': 'นอนหงาย ชันเข่า ยกตัวขึ้นนั่ง',
+    'Crunch': 'นอนหงาย ยกไหล่ขึ้นพ้นพื้น เกร็งท้อง',
+    'Bicycle Crunches': 'นอนหงาย มือแตะหู บิดตัวเอาศอกแตะเข่าฝั่งตรงข้าม',
+    'Russian Twists': 'นั่งยกขา เอนตัวหลัง บิดตัวซ้ายขวา',
+    'Leg Raises': 'นอนราบ ยกขาคู่ขึ้นตั้งฉาก ค่อยๆ ลดลงห้ามส้นเท้าแตะพื้น',
+    'Mountain Climbers': 'ท่าเตรียมวิดพื้น ดึงเข่าเข้าหาอกสลับซ้ายขวาเร็วๆ',
+    'Dead Bugs': 'นอนหงาย แขนขาชี้ฟ้า ลดแขนซ้ายขาขวาลงใกล้พื้น สลับด้าน',
+
+    // Cardio/Other
+    'Burpees': 'ยืน -> ย่อเอามือแตะพื้น -> ดีดขาไปหลัง -> วิดพื้น -> ดีดขากลับ -> กระโดด',
+    'Jumping Jacks': 'กระโดดตบ',
+    'Box Jumps': 'ยืนหน้ากล่อง ย่อตัวแล้วกระโดดขึ้นไปยืนบนกล่อง',
+    'Kettlebell Swings': 'ยืนกางขา เหวี่ยงเคตเทิลเบลลอดขา ดันสะโพกส่งแรงเหวี่ยงขึ้นระดับอก',
+    'Sprint Intervals': 'วิ่งเร็วที่สุดเท่าที่ทำได้สลับกับเดินพัก',
+    'Light Jog': 'วิ่งเหยาะๆ สบายๆ',
+    'Yoga Flow': 'เคลื่อนไหวท่าโยคะต่อเนื่อง เน้นลมหายใจและการยืดเหยียด',
+    'Stretching': 'ยืดเหยียดกล้ามเนื้อส่วนต่างๆ ค้างไว้ 15-30 วินาที',
+};
+
+const EXERCISE_IMAGE_MAP: Record<string, string> = {
+    // Basic Bodyweight
+    'Squats': 'Bodyweight_Squat',
+    'Squat': 'Bodyweight_Squat',
+    'Bodyweight Squats': 'Bodyweight_Squat',
+    'Goblet Squats': 'Goblet_Squat_with_dumbell',
+    'Push-ups': 'Push_Up',
+    'Lunges': 'Bodyweight_Lunge',
+    'Stationary Lunges': 'Bodyweight_Lunge',
+    'Plank': 'Plank',
+    'Pull-ups': 'Pull_Up',
+    'Chin-ups': 'Chin_Up',
+    'Dips': 'Chest_Dip',
+    'Tricep Dips': 'Bench_Dip',
+    'Burpees': 'Burpee',
+    'Mountain Climbers': 'Mountain_Climber',
+    'Jumping Jacks': 'Jumping_Jack',
+    'Sit-ups': 'Sit_Up',
+    'Crunch': 'Crunch',
+    'Bicycle Crunches': 'Air_Bike',
+    'Leg Raises': 'Leg_Raise',
+    'Russian Twists': 'Russian_Twist',
+    'Glute Bridges': 'Glute_Bridge',
+    'Dead Bugs': 'Dead_Bug',
+    'Bird Dog': 'Bird_Dog',
+    'Donkey Kicks': 'Glute_Kickback',
+    'Sumo Squats': 'Sumo_Squat',
+
+    // Weights / Gym
+    'Bench Press': 'Barbell_Bench_Press_-_Medium_Grip',
+    'Bench': 'Barbell_Bench_Press_-_Medium_Grip',
+    'Dumbbell Rows': 'Dumbbell_Bent_Over_Row',
+    'Rows': 'Barbell_Bent_Over_Row',
+    'Row': 'Barbell_Bent_Over_Row',
+    'Bent Over Rows': 'Barbell_Bent_Over_Row',
+    'Barbell Row': 'Barbell_Bent_Over_Row',
+    'Barbell Rows': 'Barbell_Bent_Over_Row',
+    'Deadlifts': 'Barbell_Deadlift',
+    'Deadlift': 'Barbell_Deadlift',
+    'Romanian Deadlifts': 'Romanian_Deadlift_from_Deficit',
+    'RDLs': 'Romanian_Deadlift_from_Deficit',
+    'Overhead Press': 'Barbell_Shoulder_Press',
+    'OHP': 'Barbell_Shoulder_Press',
+    'Lat Pulldown': 'Front_Lat_Pulldown',
+    'Lat Pulldowns': 'Front_Lat_Pulldown',
+    'Pull-ups/Lat Pulldown': 'Front_Lat_Pulldown',
+    'Face Pulls': 'Face_Pull',
+    'Lateral Raises': 'Side_Lateral_Raise',
+    'Leg Press': 'Leg_Press',
+    'Leg Curls': 'Lying_Leg_Curl',
+    'Leg Extensions': 'Leg_Extension',
+    'Calf Raises': 'Standing_Calf_Raise',
+    'Cable Flyes': 'Cable_Crossover',
+    'Tricep Pushdowns': 'Pushdown',
+    'Barbell Curls': 'Barbell_Curl',
+    'Bicep Curls': 'Dumbbell_Bicep_Curl',
+    'Hammer Curls': 'Hammer_Curl',
+    'Incline Dumbbell Press': 'Incline_Dumbbell_Press',
+    'Incline DB Press': 'Incline_Dumbbell_Press',
+    'DB Press': 'Dumbbell_Bench_Press',
+    'Skullcrushers': 'Barbell_Lying_Triceps_Extension',
+    'Cable Rows': 'Seated_Cable_Row',
+    'Front Squats': 'Front_Squat',
+    'Front Squats/Leg Press': 'Front_Squat',
+    'Kettlebell Swings': 'Kettlebell_Swing',
+    'Box Jumps': 'Box_Jump',
+
+    // Cardio / Stretch / Yoga
+    'Yoga Flow': 'Yoga_Ra_Jao_Sun_Salutation', // Fallback to a yoga image
+    'Stretching': 'Adductor_Stretching', // Fallback generic stretch
+    'Sprint Intervals': 'Run', // Needs fallback or check if Run exists, often Trail_Running or similar. 
+    'Light Jog': 'Jogging', // Often High_Knees or similar if generic not found. Let's use 'High_Knees' as fallback.
 };
 
 const getThaiName = (engName: string) => THAI_NAMES[engName] || engName;
+const getDescription = (name: string) => EXERCISE_DESCRIPTIONS[name] || EXERCISE_DESCRIPTIONS['Generic'];
+
+// Helper to create exercises with image
+const createExercise = (name: string, sets: number, reps: string): Exercise => {
+    // Try exact match or direct name
+    let imgPath = EXERCISE_IMAGE_MAP[name] || name.replace(/ /g, '_');
+
+    // Handle generic cardio/yoga that might not have exact 0.jpg folder
+    // Smart fallback if mapped to something specific unique
+
+    return {
+        name,
+        sets,
+        reps,
+        image: `${IMG_BASE}/${imgPath}/0.jpg`,
+        description: getDescription(name)
+    };
+};
 
 // Smart Adjustment Logic
 const createSmartExercise = (baseExercise: Exercise, bmiCategory: string, goal: string): Exercise => {
-    let { name, sets, reps } = baseExercise;
+    let { name, sets, reps, image, description } = baseExercise;
     // Add Thai Name context
     let displayName = getThaiName(name);
 
@@ -98,7 +285,7 @@ const createSmartExercise = (baseExercise: Exercise, bmiCategory: string, goal: 
         }
     }
 
-    return { name: displayName, sets, reps };
+    return { name: displayName, sets, reps, image, description };
 };
 
 // --- PLAN TEMPLATES ---

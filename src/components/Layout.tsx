@@ -16,14 +16,17 @@ export default function Layout({ children }: LayoutProps) {
     const showNavbar = !hideNavbarPaths.includes(location.pathname);
 
     return (
-        <div className="min-h-screen bg-background text-text font-sans antialiased flex flex-col overflow-x-hidden selection:bg-primary/20">
-            {/* Main Content Area */}
-            <main className="flex-1 w-full max-w-[1200px] mx-auto pb-20 md:pb-0">
-                {children}
-            </main>
+        <div className="min-h-screen bg-background text-text font-sans antialiased flex flex-col justify-center items-center">
+            {/* Mobile App Container */}
+            <div className="w-full max-w-lg min-h-screen bg-background relative shadow-2xl overflow-hidden flex flex-col">
+                {/* Main Content Area */}
+                <main className="flex-1 w-full pb-24 overflow-y-auto scrollbar-hide">
+                    {children}
+                </main>
 
-            {/* Navbar - Fixed at bottom for mobile, top/sticky for desktop if needed, currently styled in component */}
-            {showNavbar && <Navbar />}
+                {/* Navbar */}
+                {showNavbar && <Navbar />}
+            </div>
         </div>
     );
 }

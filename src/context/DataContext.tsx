@@ -15,6 +15,7 @@ export type DailyData = {
     sleepEnd?: string;   // HH:mm
     meals: Meal[];
     workoutCompleted: boolean;
+    completedExercises: number[];
 };
 
 type DataContextType = {
@@ -26,6 +27,7 @@ type DataContextType = {
     updateWater: (date: Date, amount: number) => void;
     updateSleep: (date: Date, hours: number, start?: string, end?: string) => void;
     toggleWorkoutComplete: (date: Date) => void;
+    toggleExerciseComplete: (date: Date, index: number, totalExercises: number) => void;
 };
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -47,7 +49,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem('fitjang_data', JSON.stringify(dailyData));
     }, [dailyData]);
 
-    const getDateKey = (date: Date) => date.toISOString().split('T')[0];
+    const getDateKey = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
 
     const getDataForDate = (date: Date) => {
         const key = getDateKey(date);
@@ -57,6 +64,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
             sleepDuration: 0,
             meals: [],
             workoutCompleted: false,
+            completedExercises: [],
         };
     };
 
@@ -69,6 +77,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
                 sleepDuration: 0,
                 meals: [],
                 workoutCompleted: false,
+                completedExercises: [],
             };
             return { ...prev, [key]: updater(current) };
         });
@@ -108,7 +117,36 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         updateDateData(date, data => ({
             ...data,
             workoutCompleted: !data.workoutCompleted,
+            // If marking complete manually, maybe mark all exercises as complete?
+            // Or leave them as is? Let's leave them for now to avoid complexity unless requested.
+            // Actually, if toggling off, strict logic would mean unchecking some?
+            // User requested if all exercises clicked -> finish.
+            // If finish clicked -> maybe just finish state regardless of exercises.
         }));
+    };
+
+    const toggleExerciseComplete = (date: Date, index: number, totalExercises: number) => {
+        updateDateData(date, data => {
+            const currentCompleted = data.completedExercises || [];
+            const isCompleted = currentCompleted.includes(index);
+
+            let newCompleted;
+            if (isCompleted) {
+                newCompleted = currentCompleted.filter(i => i !== index);
+            } else {
+                newCompleted = [...currentCompleted, index];
+            }
+
+            const allDone = newCompleted.length === totalExercises && totalExercises > 0;
+
+            return {
+                ...data,
+                completedExercises: newCompleted,
+                workoutCompleted: allDone ? true : (isCompleted ? false : data.workoutCompleted) // If unchecking, and was complete, uncomplete. If checking and all done, complete.
+                // Wait, logic: if I uncheck one, it's no longer ALL done, so workoutCompleted should be false.
+                // So: workoutCompleted: newCompleted.length === totalExercises
+            };
+        });
     };
 
     return (
@@ -120,7 +158,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
             removeMeal,
             updateWater,
             updateSleep,
-            toggleWorkoutComplete
+            toggleWorkoutComplete,
+            toggleExerciseComplete
         }}>
             {children}
         </DataContext.Provider>

@@ -2,6 +2,8 @@ export type Exercise = {
     name: string;
     sets: number;
     reps: string;
+    image?: string;
+    description?: string;
 };
 
 export type DailyWorkout = {
