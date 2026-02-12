@@ -4,6 +4,9 @@ export type Meal = {
     id: string;
     name: string;
     calories: number;
+    protein?: number;
+    carbs?: number;
+    fat?: number;
     time: string;
 };
 
@@ -16,6 +19,9 @@ export type DailyData = {
     meals: Meal[];
     workoutCompleted: boolean;
     completedExercises: number[];
+    weight?: number;
+    bodyFat?: number;
+    steps?: number;
 };
 
 type DataContextType = {
@@ -28,6 +34,8 @@ type DataContextType = {
     updateSleep: (date: Date, hours: number, start?: string, end?: string) => void;
     toggleWorkoutComplete: (date: Date) => void;
     toggleExerciseComplete: (date: Date, index: number, totalExercises: number) => void;
+    updateBodyMetrics: (date: Date, weight?: number, bodyFat?: number) => void;
+    updateSteps: (date: Date, steps: number) => void;
 };
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -65,6 +73,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
             meals: [],
             workoutCompleted: false,
             completedExercises: [],
+            steps: 0,
         };
     };
 
@@ -78,6 +87,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
                 meals: [],
                 workoutCompleted: false,
                 completedExercises: [],
+                steps: 0,
             };
             return { ...prev, [key]: updater(current) };
         });
@@ -117,11 +127,6 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         updateDateData(date, data => ({
             ...data,
             workoutCompleted: !data.workoutCompleted,
-            // If marking complete manually, maybe mark all exercises as complete?
-            // Or leave them as is? Let's leave them for now to avoid complexity unless requested.
-            // Actually, if toggling off, strict logic would mean unchecking some?
-            // User requested if all exercises clicked -> finish.
-            // If finish clicked -> maybe just finish state regardless of exercises.
         }));
     };
 
@@ -142,11 +147,24 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
             return {
                 ...data,
                 completedExercises: newCompleted,
-                workoutCompleted: allDone ? true : (isCompleted ? false : data.workoutCompleted) // If unchecking, and was complete, uncomplete. If checking and all done, complete.
-                // Wait, logic: if I uncheck one, it's no longer ALL done, so workoutCompleted should be false.
-                // So: workoutCompleted: newCompleted.length === totalExercises
+                workoutCompleted: allDone ? true : (isCompleted ? false : data.workoutCompleted)
             };
         });
+    };
+
+    const updateBodyMetrics = (date: Date, weight?: number, bodyFat?: number) => {
+        updateDateData(date, data => ({
+            ...data,
+            weight: weight !== undefined ? weight : data.weight,
+            bodyFat: bodyFat !== undefined ? bodyFat : data.bodyFat,
+        }));
+    };
+
+    const updateSteps = (date: Date, steps: number) => {
+        updateDateData(date, data => ({
+            ...data,
+            steps: steps,
+        }));
     };
 
     return (
@@ -159,7 +177,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
             updateWater,
             updateSleep,
             toggleWorkoutComplete,
-            toggleExerciseComplete
+            toggleExerciseComplete,
+            updateBodyMetrics,
+            updateSteps
         }}>
             {children}
         </DataContext.Provider>

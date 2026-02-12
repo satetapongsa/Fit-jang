@@ -18,7 +18,7 @@ export default function Tracker() {
     const calorieGoal = profile?.calorieGoal || 2500;
 
     // Local state for forms
-    const [newMeal, setNewMeal] = useState({ name: '', calories: '' });
+    const [newMeal, setNewMeal] = useState({ name: '', calories: '', protein: '', carbs: '', fat: '' });
     const [sleepTimes, setSleepTimes] = useState({
         start: currentData.sleepStart || '23:00',
         end: currentData.sleepEnd || '07:00'
@@ -49,9 +49,12 @@ export default function Tracker() {
         addMeal(selectedDate, {
             name: newMeal.name,
             calories: Number(newMeal.calories),
+            protein: newMeal.protein ? Number(newMeal.protein) : 0,
+            carbs: newMeal.carbs ? Number(newMeal.carbs) : 0,
+            fat: newMeal.fat ? Number(newMeal.fat) : 0,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         });
-        setNewMeal({ name: '', calories: '' });
+        setNewMeal({ name: '', calories: '', protein: '', carbs: '', fat: '' });
     };
 
 
@@ -157,24 +160,31 @@ export default function Tracker() {
                         {/* Add Meal Form */}
                         <div className="glass p-4 rounded-2xl space-y-3">
                             <h3 className="font-bold text-sm text-white flex items-center gap-2"><Plus size={16} className="text-primary" /> Add Meal</h3>
-                            <form onSubmit={handleAddMeal} className="flex gap-2">
-                                <div className="flex-1 space-y-2">
+                            <form onSubmit={handleAddMeal} className="space-y-3">
+                                <div className="grid grid-cols-2 gap-2">
                                     <input
-                                        className="w-full bg-surfaceHighlight/50 border border-white/5 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-text-muted/50"
+                                        className="col-span-2 w-full bg-surfaceHighlight/50 border border-white/5 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-text-muted/50"
                                         placeholder="Meal Name (e.g., Chicken Rice)"
                                         value={newMeal.name}
                                         onChange={e => setNewMeal({ ...newMeal, name: e.target.value })}
                                     />
                                     <input
                                         className="w-full bg-surfaceHighlight/50 border border-white/5 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-text-muted/50"
-                                        placeholder="Calories (e.g., 500)"
+                                        placeholder="Calories"
                                         type="number"
                                         value={newMeal.calories}
                                         onChange={e => setNewMeal({ ...newMeal, calories: e.target.value })}
                                     />
+                                    <input
+                                        className="w-full bg-surfaceHighlight/50 border border-white/5 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-text-muted/50"
+                                        placeholder="Protein (g)"
+                                        type="number"
+                                        value={newMeal.protein}
+                                        onChange={e => setNewMeal({ ...newMeal, protein: e.target.value })}
+                                    />
                                 </div>
-                                <button type="submit" className="bg-primary text-white rounded-xl px-4 font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform flex items-center justify-center">
-                                    <Plus size={24} />
+                                <button type="submit" className="w-full bg-primary text-white rounded-xl py-2 font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2">
+                                    <Plus size={16} /> Add Log
                                 </button>
                             </form>
                         </div>
@@ -191,7 +201,7 @@ export default function Tracker() {
                                             </div>
                                             <div>
                                                 <p className="font-bold text-white">{meal.name}</p>
-                                                <p className="text-xs text-text-muted">{meal.time}</p>
+                                                <p className="text-xs text-text-muted">{meal.time} • <span className="text-yellow-500">{meal.protein || 0}g Pro</span></p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">
