@@ -3,7 +3,7 @@ import Calendar from 'react-calendar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { Plus, Trash2, Utensils, GlassWater, Moon, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Edit2 } from 'lucide-react';
+import { Plus, Trash2, Utensils, GlassWater, Moon, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { useData } from '../context/DataContext';
 import { useUser } from '../context/UserContext';
