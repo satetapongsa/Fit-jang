@@ -7,20 +7,21 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
-    console.log("Layout: Rendering...");
     const location = useLocation();
-    console.log("Layout: Current location:", location.pathname);
 
     // Define pages where Navbar should be hidden
-    const hideNavbarPaths = ['/', '/profile'];
+    const hideNavbarPaths = ['/'];
     const showNavbar = !hideNavbarPaths.includes(location.pathname);
 
     return (
-        <div className="min-h-screen bg-background text-text font-sans antialiased flex flex-col justify-center items-center">
+        <div className="min-h-screen bg-background text-text font-sans antialiased flex flex-col justify-center items-center overflow-hidden">
+            {/* Background Effects */}
+            <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background pointer-events-none" />
+
             {/* Mobile App Container */}
-            <div className="w-full max-w-lg min-h-screen bg-background relative shadow-2xl overflow-hidden flex flex-col">
+            <div className="w-full max-w-md min-h-screen bg-transparent relative flex flex-col z-10">
                 {/* Main Content Area */}
-                <main className="flex-1 w-full pb-24 overflow-y-auto scrollbar-hide">
+                <main className="flex-1 w-full pb-28 overflow-y-auto scrollbar-hide px-4 pt- safe">
                     {children}
                 </main>
 

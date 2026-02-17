@@ -22,6 +22,7 @@ type UserContextType = {
     updateProfile: (updates: Partial<UserProfile>) => void;
     calculateBMR: () => number;
     calculateBMI: () => { value: number; category: string };
+    createGuestProfile: () => void;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -85,8 +86,24 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         return { value: bmi, category };
     };
 
+    const createGuestProfile = () => {
+        const guestProfile: UserProfile = {
+            name: 'Guest User',
+            weight: 70,
+            height: 170,
+            age: 25,
+            gender: 'male',
+            activityLevel: 'moderate',
+            workoutDays: 3,
+            waterGoal: 2500,
+            calorieGoal: 2000,
+            goal: 'general',
+        };
+        setProfile(guestProfile);
+    };
+
     return (
-        <UserContext.Provider value={{ profile, setProfile, updateProfile, calculateBMR, calculateBMI }}>
+        <UserContext.Provider value={{ profile, setProfile, updateProfile, calculateBMR, calculateBMI, createGuestProfile }}>
             {children}
         </UserContext.Provider>
     );

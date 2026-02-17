@@ -6,6 +6,7 @@ export type Meal = {
     calories: number;
     protein?: number;
     carbs?: number;
+    sugar?: number;
     fat?: number;
     time: string;
 };
@@ -32,10 +33,15 @@ type DataContextType = {
     removeMeal: (date: Date, id: string) => void;
     updateWater: (date: Date, amount: number) => void;
     updateSleep: (date: Date, hours: number, start?: string, end?: string) => void;
+    clearSleep: (date: Date) => void;
     toggleWorkoutComplete: (date: Date) => void;
     toggleExerciseComplete: (date: Date, index: number, totalExercises: number) => void;
     updateBodyMetrics: (date: Date, weight?: number, bodyFat?: number) => void;
     updateSteps: (date: Date, steps: number) => void;
+    customFoods: Meal[];
+    addCustomFood: (food: Omit<Meal, 'id'>) => void;
+    removeCustomFood: (id: string) => void;
+    updateCustomFood: (id: string, updates: Partial<Meal>) => void;
 };
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -167,6 +173,34 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         }));
     };
 
+    // Custom Foods Logic
+    const [customFoods, setCustomFoods] = useState<Meal[]>(() => {
+        try {
+            const saved = localStorage.getItem('fitjang_custom_foods');
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            console.error("Failed to load custom foods", e);
+            return [];
+        }
+    });
+
+    useEffect(() => {
+        localStorage.setItem('fitjang_custom_foods', JSON.stringify(customFoods));
+    }, [customFoods]);
+
+    const addCustomFood = (food: Omit<Meal, 'id'>) => {
+        const newFood = { ...food, id: Math.random().toString(36).substr(2, 9) };
+        setCustomFoods(prev => [newFood, ...prev]);
+    };
+
+    const removeCustomFood = (id: string) => {
+        setCustomFoods(prev => prev.filter(f => f.id !== id));
+    };
+
+    const updateCustomFood = (id: string, updates: Partial<Meal>) => {
+        setCustomFoods(prev => prev.map(f => f.id === id ? { ...f, ...updates } : f));
+    };
+
     return (
         <DataContext.Provider value={{
             selectedDate,
@@ -176,10 +210,15 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
             removeMeal,
             updateWater,
             updateSleep,
+            clearSleep: (date: Date) => updateDateData(date, data => ({ ...data, sleepDuration: 0, sleepStart: undefined, sleepEnd: undefined })),
             toggleWorkoutComplete,
             toggleExerciseComplete,
             updateBodyMetrics,
-            updateSteps
+            updateSteps,
+            customFoods,
+            addCustomFood,
+            removeCustomFood,
+            updateCustomFood
         }}>
             {children}
         </DataContext.Provider>

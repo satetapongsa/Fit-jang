@@ -2,9 +2,9 @@ import { type ButtonHTMLAttributes, forwardRef } from 'react';
 import { cn } from '../../utils/cn';
 import { Loader2 } from 'lucide-react';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-    size?: 'sm' | 'md' | 'lg';
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+    variant?: 'primary' | 'secondary' | 'accent' | 'outline' | 'ghost' | 'glass';
+    size?: 'sm' | 'md' | 'lg' | 'icon';
     isLoading?: boolean;
 }
 
@@ -14,15 +14,21 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             <button
                 ref={ref}
                 className={cn(
-                    'inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50 disabled:pointer-events-none',
+                    'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-300 active:scale-95 focus:outline-none disabled:opacity-50 disabled:pointer-events-none',
                     {
-                        'bg-primary text-primary-foreground hover:bg-primary/90': variant === 'primary',
-                        'bg-secondary text-secondary-foreground hover:bg-secondary/90': variant === 'secondary',
-                        'border border-border bg-transparent hover:bg-surfaceHighlight text-text': variant === 'outline',
-                        'hover:bg-surfaceHighlight text-text': variant === 'ghost',
-                        'h-9 px-4 text-sm': size === 'sm',
-                        'h-11 px-6 text-base': size === 'md',
-                        'h-14 px-8 text-lg': size === 'lg',
+                        // Variants
+                        'bg-primary text-primary-foreground hover:brightness-110 shadow-[0_0_15px_rgba(14,165,233,0.3)] hover:shadow-[0_0_25px_rgba(14,165,233,0.5)]': variant === 'primary',
+                        'bg-secondary text-secondary-foreground hover:brightness-110 shadow-[0_0_15px_rgba(139,92,246,0.3)]': variant === 'secondary',
+                        'bg-accent text-accent-foreground hover:brightness-110 shadow-[0_0_15px_rgba(244,63,94,0.3)]': variant === 'accent',
+                        'border border-border bg-transparent hover:bg-white/5 text-text': variant === 'outline',
+                        'hover:bg-white/5 text-text': variant === 'ghost',
+                        'glass hover:bg-white/10 text-text border-white/10': variant === 'glass',
+
+                        // Sizes
+                        'h-9 px-4 text-xs': size === 'sm',
+                        'h-12 px-6 text-sm': size === 'md',
+                        'h-14 px-8 text-base': size === 'lg',
+                        'h-10 w-10 p-0': size === 'icon',
                     },
                     className
                 )}

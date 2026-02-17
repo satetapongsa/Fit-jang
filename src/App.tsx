@@ -7,6 +7,7 @@ import ProfileSetup from './pages/ProfileSetup';
 import Dashboard from './pages/Dashboard';
 import Schedule from './pages/Schedule';
 import Tracker from './pages/Tracker';
+import FoodDiary from './pages/FoodDiary';
 import './calendar-custom.css';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/tracker" element={<Tracker />} />
+              <Route path="/food-diary" element={<FoodDiary />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Layout>
