@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useUser } from '../context/UserContext';
 import { useData } from '../context/DataContext';
 import { generateSmartPlan, getDailyWorkout } from '../utils/workoutData';
@@ -6,7 +5,7 @@ import {
     Activity, Moon, Droplets,
     Dumbbell, Calendar as CalendarIcon, Flame, Utensils
 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { cn } from '../utils/cn';
 import DonutChart from '../components/charts/DonutChart';
 import DailyTimeline, { type TimelineItem } from '../components/DailyTimeline';

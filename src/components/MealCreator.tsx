@@ -15,14 +15,15 @@ export type MealData = {
 interface MealCreatorProps {
     onSave: (meal: MealData) => void;
     onCancel: () => void;
+    initialData?: any;
 }
 
-export default function MealCreator({ onSave, onCancel }: MealCreatorProps) {
-    const [name, setName] = useState('');
-    const [calories, setCalories] = useState('');
-    const [protein, setProtein] = useState('');
-    const [fat, setFat] = useState('');
-    const [carbs, setCarbs] = useState(''); // Sugar/Carbs
+export default function MealCreator({ onSave, onCancel, initialData }: MealCreatorProps) {
+    const [name, setName] = useState(initialData?.name || '');
+    const [calories, setCalories] = useState(initialData?.calories?.toString() || '');
+    const [protein, setProtein] = useState(initialData?.protein?.toString() || '');
+    const [fat, setFat] = useState(initialData?.fat?.toString() || '');
+    const [carbs, setCarbs] = useState(initialData?.carbs?.toString() || ''); // Sugar/Carbs
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

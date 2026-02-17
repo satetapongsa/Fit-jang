@@ -3,7 +3,7 @@ import FoodLog from '../components/FoodLog';
 import MealCreator from '../components/MealCreator';
 import { useData } from '../context/DataContext';
 import { ChevronLeft } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function FoodDiary() {
     const [mode, setMode] = useState<'log' | 'create'>('log');
