@@ -1,6 +1,6 @@
 import { MEAL_RECOMMENDATIONS, type MealCategory } from '../utils/mealData';
 import { useState, useMemo } from 'react';
-import { Sparkles, RefreshCw, Dumbbell, Leaf, Utensils, Milk } from 'lucide-react';
+import { Sparkles, RefreshCw, Dumbbell, Leaf, Utensils, Milk, Cookie } from 'lucide-react';
 import { Button } from './ui/Button';
 import { cn } from '../utils/cn';
 
@@ -14,6 +14,7 @@ const CATEGORIES: { id: MealCategory; label: string; icon: any }[] = [
     { id: 'vegetarian', label: 'Veggie', icon: Leaf },
     { id: 'vegan', label: 'Vegan', icon: Leaf },
     { id: 'dairy', label: 'Dairy', icon: Milk },
+    { id: 'snack', label: 'Snacks', icon: Cookie },
 ];
 
 export default function MealRecommendation({ onSelect }: MealRecommendationProps) {
