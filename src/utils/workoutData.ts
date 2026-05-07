@@ -75,6 +75,12 @@ const THAI_NAMES: Record<string, string> = {
     'Front Squats/Leg Press': 'สควอทบาร์หน้าหรือดันขา',
     'Kettlebell Swings': 'แกว่งเคตเทิลเบล (KB Swings)',
     'Box Jumps': 'กระโดดขึ้นกล่อง (Box Jumps)',
+    'Bulgarian Split Squats': 'บัลแกเรียน สปลิท สควอท (Bulgarian Split Squat)',
+    'Step Ups': 'ก้าวขึ้นม้านั่ง (Step Ups)',
+    'Hip Thrusts': 'ฮิปทรัสต์ (Hip Thrusts)',
+    'Hack Squats': 'แฮคสควอท (Hack Squats)',
+    'Single Leg RDLs': 'เดดลิฟท์ขาเดียว (Single Leg RDL)',
+    'Goblet Squat': 'สควอทถือดัมเบล (Goblet Squat)',
 
     // Cardio / Yoga / Active
     'Sprint Intervals': 'วิ่งสปีดสลับเดิน (Sprint Intervals)',
@@ -167,6 +173,11 @@ const EXERCISE_DESCRIPTIONS: Record<string, string> = {
     'Jumping Jacks': 'กระโดดตบ',
     'Box Jumps': 'ยืนหน้ากล่อง ย่อตัวแล้วกระโดดขึ้นไปยืนบนกล่อง',
     'Kettlebell Swings': 'ยืนกางขา เหวี่ยงเคตเทิลเบลลอดขา ดันสะโพกส่งแรงเหวี่ยงขึ้นระดับอก',
+    'Bulgarian Split Squats': 'ยืนหันหลังให้ม้านั่ง วางเท้าข้างหนึ่งบนม้านั่ง ย่อตัวลงจนเข่าหลังเกือบแตะพื้น แล้วดันตัวขึ้น',
+    'Step Ups': 'ก้าวเท้าขึ้นบนม้านั่งหรือกล่อง ดันตัวขึ้นยืนตรง แล้วก้าวลงช้าๆ ทำสลับข้าง',
+    'Hip Thrusts': 'นั่งพิงม้านั่ง วางบาร์บนสะโพก ยกสะโพกขึ้นจนตัวตรง เกร็งก้นให้สุดแล้วลดลง',
+    'Hack Squats': 'ใช้เครื่อง Hack Squat ย่อตัวลงจนต้นขาขนานพื้น แล้วดันตัวขึ้น เน้นหน้าขา',
+    'Single Leg RDLs': 'ยืนขาเดียว ถือน้ำหนัก ค่อยๆ ก้มตัวพับสะโพกไปข้างหลังโดยที่หลังตรง แล้วดึงกลับ',
     'Sprint Intervals': 'วิ่งเร็วที่สุดเท่าที่ทำได้สลับกับเดินพัก',
     'Light Jog': 'วิ่งเหยาะๆ สบายๆ',
     'Yoga Flow': 'เคลื่อนไหวท่าโยคะต่อเนื่อง เน้นลมหายใจและการยืดเหยียด',
@@ -243,6 +254,11 @@ const EXERCISE_IMAGE_MAP: Record<string, string> = {
     'Front Squats/Leg Press': 'Front_Squat',
     'Kettlebell Swings': 'Kettlebell_Swing',
     'Box Jumps': 'Box_Jump',
+    'Bulgarian Split Squats': 'Bulgarian_Split_Squat',
+    'Step Ups': 'Step-up',
+    'Hip Thrusts': 'Barbell_Hip_Thrust',
+    'Hack Squats': 'Hack_Squat',
+    'Single Leg RDLs': 'Single_Leg_Dumbbell_Deadlift',
 
     // Cardio / Stretch / Yoga
     'Yoga Flow': 'Yoga_Ra_Jao_Sun_Salutation',
@@ -424,7 +440,14 @@ const PLANS: Record<number, Plan> = {
             { day: 1, type: "Chest (อก)", exercises: [createExercise("Bench Press", 4, "8-10"), createExercise("Incline Dumbbell Press", 3, "10-12"), createExercise("Cable Flyes", 3, "15")] },
             { day: 2, type: "Back (หลัง)", exercises: [createExercise("Deadlift", 3, "5-8"), createExercise("Pull-ups", 3, "Failure"), createExercise("Barbell Rows", 3, "8-10")] },
             { day: 3, type: "Shoulders (ไหล่)", exercises: [createExercise("Overhead Press", 4, "8-10"), createExercise("Lateral Raises", 4, "15-20"), createExercise("Face Pulls", 3, "15")] },
-            { day: 4, type: "Legs (ขา)", exercises: [createExercise("Squats", 4, "8-10"), createExercise("Leg Press", 3, "12"), createExercise("Leg Extensions", 3, "15")] },
+            { day: 4, type: "Legs (ขา)", exercises: [
+                createExercise("Squats", 4, "8-10"),
+                createExercise("Romanian Deadlifts", 3, "10-12"),
+                createExercise("Leg Press", 3, "12"),
+                createExercise("Leg Extensions", 3, "15"),
+                createExercise("Leg Curls", 3, "15"),
+                createExercise("Calf Raises", 4, "15-20")
+            ] },
             { day: 5, type: "Arms (แขน)", exercises: [createExercise("Barbell Curls", 3, "10-12"), createExercise("Tricep Pushdowns", 3, "12-15"), createExercise("Hammer Curls", 3, "12")] },
         ]
     },
@@ -434,10 +457,22 @@ const PLANS: Record<number, Plan> = {
         schedule: [
             { day: 1, type: "Push A (อก/ไหล่/หลังแขน)", exercises: [createExercise("Bench Press", 4, "8"), createExercise("OHP", 3, "10"), createExercise("Tricep Dips", 3, "12")] },
             { day: 2, type: "Pull A (หลัง/หน้าแขน)", exercises: [createExercise("Barbell Rows", 4, "8"), createExercise("Pull-ups", 3, "Max"), createExercise("Bicep Curls", 3, "12")] },
-            { day: 3, type: "Legs A (ขา/น่อง)", exercises: [createExercise("Squats", 4, "8"), createExercise("RDLs", 3, "10"), createExercise("Calf Raises", 4, "15")] },
+            { day: 3, type: "Legs A (ขา/น่อง)", exercises: [
+                createExercise("Squats", 4, "8"),
+                createExercise("Bulgarian Split Squats", 3, "10/leg"),
+                createExercise("RDLs", 3, "10"),
+                createExercise("Leg Extensions", 3, "12"),
+                createExercise("Calf Raises", 4, "15")
+            ] },
             { day: 4, type: "Push B (อก/ไหล่/หลังแขน)", exercises: [createExercise("Incline DB Press", 3, "10"), createExercise("Lateral Raises", 4, "15"), createExercise("Skullcrushers", 3, "12")] },
             { day: 5, type: "Pull B (หลัง/หน้าแขน)", exercises: [createExercise("Lat Pulldowns", 3, "10"), createExercise("Cable Rows", 3, "12"), createExercise("Hammer Curls", 3, "12")] },
-            { day: 6, type: "Legs B (ขา/น่อง)", exercises: [createExercise("Front Squats/Leg Press", 3, "10"), createExercise("Leg Curls", 3, "12"), createExercise("Lunges", 3, "12")] },
+            { day: 6, type: "Legs B (ขา/น่อง)", exercises: [
+                createExercise("Front Squats/Leg Press", 3, "10"),
+                createExercise("Hip Thrusts", 3, "12"),
+                createExercise("Single Leg RDLs", 3, "12/leg"),
+                createExercise("Leg Curls", 3, "12"),
+                createExercise("Lunges", 3, "12")
+            ] },
         ]
     },
     7: {
@@ -448,7 +483,15 @@ const PLANS: Record<number, Plan> = {
             { day: 2, type: "Cardio / HIIT (เบิร์นไขมัน)", exercises: [createExercise("Sprint Intervals", 10, "30s on/30s off"), createExercise("Burpees", 3, "15")] },
             { day: 3, type: "Upper Body Hypertrophy (กล้ามเนื้อช่วงบน)", exercises: [createExercise("DB Press", 3, "10"), createExercise("Pull-ups", 3, "10"), createExercise("Dips", 3, "12")] },
             { day: 4, type: "Active Recovery (ฟื้นฟู)", exercises: [createExercise("Yoga Flow", 1, "30 min"), createExercise("Light Jog", 1, "20 min")] },
-            { day: 5, type: "Lower Body Focus (กล้ามเนื้อช่วงล่าง)", exercises: [createExercise("Deadlift", 3, "5"), createExercise("Lunges", 3, "12"), createExercise("Plank", 3, "60s")] },
+            { day: 5, type: "Lower Body Focus (กล้ามเนื้อช่วงล่าง)", exercises: [
+                createExercise("Squats", 3, "10-12"),
+                createExercise("Hip Thrusts", 3, "12"),
+                createExercise("Bulgarian Split Squats", 3, "10/leg"),
+                createExercise("Romanian Deadlifts", 3, "12"),
+                createExercise("Leg Extensions", 3, "15"),
+                createExercise("Calf Raises", 3, "20"),
+                createExercise("Plank", 3, "60s")
+            ] },
             { day: 6, type: "Metcon (ความอึด)", exercises: [createExercise("Kettlebell Swings", 4, "20"), createExercise("Box Jumps", 4, "15"), createExercise("Push-ups", 4, "20")] },
             { day: 0, type: "Mobility & Core (แกนกลาง & ยืดเหยียด)", exercises: [createExercise("Stretching", 1, "20 min"), createExercise("Dead Bugs", 3, "12"), createExercise("Bird Dog", 3, "10")] },
         ]
