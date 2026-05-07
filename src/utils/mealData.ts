@@ -12,7 +12,7 @@ export interface Meal {
 }
 
 export const MEAL_RECOMMENDATIONS: Meal[] = [
-    // --- MEAT (20 ITEMS) ---
+    // --- MEAT (30 ITEMS) ---
     { name: "Grilled Chicken Breast with Quinoa", calories: 450, protein: 42, fat: 10, carbs: 35, image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800", description: "Lean protein powerhouse. Quinoa provides complex carbs.", category: 'meat' },
     { name: "Salmon Fillet with Steamed Broccoli", calories: 520, protein: 38, fat: 24, carbs: 8, image: "https://images.unsplash.com/photo-1485921325833-c519f76c4927?w=800", description: "Rich in Omega-3 fatty acids for muscle recovery.", category: 'meat' },
     { name: "Lean Beef Stir-Fry", calories: 580, protein: 45, fat: 18, carbs: 42, image: "https://images.unsplash.com/photo-1512058560366-cd2427bb5871?w=800", description: "Iron-rich beef paired with colorful veggies.", category: 'meat' },
@@ -33,8 +33,18 @@ export const MEAL_RECOMMENDATIONS: Meal[] = [
     { name: "Lemon Garlic Tilapia", calories: 280, protein: 35, fat: 6, carbs: 8, image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800", description: "Fast, easy, lean white fish.", category: 'meat' },
     { name: "Chicken and White Bean Chili", calories: 410, protein: 34, fat: 10, carbs: 40, image: "https://images.unsplash.com/photo-1547592115-f96746890d4c?w=800", description: "Hearty protein-rich soup.", category: 'meat' },
     { name: "Grilled Lamb Chops", calories: 520, protein: 36, fat: 30, carbs: 2, image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=800", description: "Flavorful protein with healthy fats.", category: 'meat' },
+    { name: "Grilled Venison with Berries", calories: 420, protein: 44, fat: 10, carbs: 12, image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=800", description: "Ultra-lean game meat with antioxidants.", category: 'meat' },
+    { name: "Pan-Seared Duck Breast", calories: 510, protein: 32, fat: 28, carbs: 4, image: "https://images.unsplash.com/photo-1432139509613-5c4255815697?w=800", description: "Rich protein with high-quality fats.", category: 'meat' },
+    { name: "Lemon Butter Salmon", calories: 490, protein: 36, fat: 26, carbs: 5, image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800", description: "Omega-3 rich fish with citrus.", category: 'meat' },
+    { name: "Honey Garlic Chicken", calories: 450, protein: 38, fat: 12, carbs: 25, image: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=800", description: "Sweet and savory lean protein.", category: 'meat' },
+    { name: "Turkey Bolognese with Zucchini", calories: 360, protein: 32, fat: 10, carbs: 15, image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800", description: "Light and high-protein pasta alternative.", category: 'meat' },
+    { name: "Grilled Shrimp Skewers", calories: 280, protein: 36, fat: 6, carbs: 8, image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800", description: "Fast, low-calorie seafood protein.", category: 'meat' },
+    { name: "Baked Sea Trout", calories: 410, protein: 34, fat: 18, carbs: 5, image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800", description: "Nutrient-dense pink fish.", category: 'meat' },
+    { name: "Roast Beef Slices", calories: 380, protein: 42, fat: 16, carbs: 2, image: "https://images.unsplash.com/photo-1512058560366-cd2427bb5871?w=800", description: "Iron-rich, high-protein beef.", category: 'meat' },
+    { name: "Pork Loin with Apples", calories: 460, protein: 36, fat: 14, carbs: 30, image: "https://images.unsplash.com/photo-1432139509613-5c4255815697?w=800", description: "Lean pork with fiber-rich fruit.", category: 'meat' },
+    { name: "Chicken Souvlaki", calories: 420, protein: 40, fat: 14, carbs: 20, image: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=800", description: "Mediterranean grilled chicken.", category: 'meat' },
 
-    // --- VEGETARIAN (20 ITEMS) ---
+    // --- VEGETARIAN (30 ITEMS) ---
     { name: "Egg White Omelette", calories: 250, protein: 30, fat: 8, carbs: 5, image: "https://images.unsplash.com/photo-1510693206972-df098062cb71?w=800", description: "High-protein vegetarian breakfast.", category: 'vegetarian' },
     { name: "Protein Pancakes", calories: 380, protein: 30, fat: 10, carbs: 40, image: "https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=800", description: "Oat-based protein breakfast.", category: 'vegetarian' },
     { name: "Egg Salad with Celery", calories: 290, protein: 18, fat: 20, carbs: 8, image: "https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800", description: "Classic egg-based protein snack.", category: 'vegetarian' },
@@ -55,8 +65,18 @@ export const MEAL_RECOMMENDATIONS: Meal[] = [
     { name: "Zucchini Fritters", calories: 260, protein: 14, fat: 14, carbs: 20, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Crispy veggie-based protein.", category: 'vegetarian' },
     { name: "Ricotta and Spinach Stuffed Shells", calories: 420, protein: 22, fat: 18, carbs: 45, image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800", description: "High-protein cheese pasta.", category: 'vegetarian' },
     { name: "Egg and Cheese Breakfast Sandwich", calories: 380, protein: 20, fat: 18, carbs: 35, image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800", description: "Classic high-protein breakfast.", category: 'vegetarian' },
+    { name: "Spinach and Ricotta Lasagna", calories: 450, protein: 28, fat: 18, carbs: 40, image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800", description: "Low-carb version of a classic.", category: 'vegetarian' },
+    { name: "Zucchini Boats with Quinoa", calories: 320, protein: 14, fat: 10, carbs: 38, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Light and high-fiber meal.", category: 'vegetarian' },
+    { name: "Mushroom Risotto (Cauliflower)", calories: 280, protein: 12, fat: 14, carbs: 25, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Low-carb, high-flavor meal.", category: 'vegetarian' },
+    { name: "Lentil Burgers", calories: 390, protein: 22, fat: 12, carbs: 45, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Plant-based patty with high protein.", category: 'vegetarian' },
+    { name: "Eggplant Parmesan (Baked)", calories: 350, protein: 16, fat: 20, carbs: 25, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Comfort food made healthy.", category: 'vegetarian' },
+    { name: "Stuffed Portobello Mushrooms", calories: 290, protein: 18, fat: 16, carbs: 18, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Large mushrooms as a meat substitute.", category: 'vegetarian' },
+    { name: "Sweet Potato Gnocchi", calories: 410, protein: 12, fat: 10, carbs: 65, image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800", description: "Vitamin-rich pasta alternative.", category: 'vegetarian' },
+    { name: "Vegetarian Pad Thai", calories: 480, protein: 18, fat: 18, carbs: 60, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Classic noodles with tofu and egg.", category: 'vegetarian' },
+    { name: "Cauliflower Buffalo Wings", calories: 240, protein: 10, fat: 12, carbs: 22, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Low-calorie snack or side.", category: 'vegetarian' },
+    { name: "Spinach and Feta Filo Pie", calories: 380, protein: 14, fat: 22, carbs: 32, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "High-protein savory pastry.", category: 'vegetarian' },
 
-    // --- VEGAN (20 ITEMS) ---
+    // --- VEGAN (30 ITEMS) ---
     { name: "Tempeh Buddha Bowl", calories: 480, protein: 32, fat: 16, carbs: 48, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Plant-based protein powerhouse.", category: 'vegan' },
     { name: "Tofu Stir-Fry with Cashews", calories: 460, protein: 26, fat: 22, carbs: 38, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "High-protein vegan dinner.", category: 'vegan' },
     { name: "Lentil Soup", calories: 420, protein: 24, fat: 8, carbs: 60, image: "https://images.unsplash.com/photo-1547592115-f96746890d4c?w=800", description: "Fiber and protein-rich comfort soup.", category: 'vegan' },
@@ -77,8 +97,18 @@ export const MEAL_RECOMMENDATIONS: Meal[] = [
     { name: "Miso Ramen with Extra Tofu", calories: 460, protein: 24, fat: 14, carbs: 60, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Satisfying vegan noodle soup.", category: 'vegan' },
     { name: "Sweet Potato and Chickpea Curry", calories: 490, protein: 18, fat: 16, carbs: 70, image: "https://images.unsplash.com/photo-1547592115-f96746890d4c?w=800", description: "Vitamin A and protein power.", category: 'vegan' },
     { name: "Smashed Avocado and Bean Toast", calories: 380, protein: 14, fat: 20, carbs: 45, image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800", description: "Healthy fat and fiber breakfast.", category: 'vegan' },
+    { name: "Jackfruit Tacos", calories: 320, protein: 12, fat: 8, carbs: 48, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Pulled pork alternative with high fiber.", category: 'vegan' },
+    { name: "Vegan Lentil Loaf", calories: 410, protein: 24, fat: 10, carbs: 55, image: "https://images.unsplash.com/photo-1547592115-f96746890d4c?w=800", description: "Hearty vegan alternative to meatloaf.", category: 'vegan' },
+    { name: "Chickpea Curry (Chana Masala)", calories: 380, protein: 16, fat: 12, carbs: 50, image: "https://images.unsplash.com/photo-1547592115-f96746890d4c?w=800", description: "Classic spicy vegan protein dish.", category: 'vegan' },
+    { name: "Tofu Banh Mi", calories: 420, protein: 22, fat: 16, carbs: 50, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Vietnamese sandwich with marinated tofu.", category: 'vegan' },
+    { name: "Vegan Sushi Rolls", calories: 340, protein: 10, fat: 8, carbs: 65, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Fresh and light rice-based meal.", category: 'vegan' },
+    { name: "Butternut Squash Soup", calories: 280, protein: 8, fat: 10, carbs: 45, image: "https://images.unsplash.com/photo-1547592115-f96746890d4c?w=800", description: "Creamy, vitamin-rich vegan soup.", category: 'vegan' },
+    { name: "Ratatouille", calories: 240, protein: 8, fat: 12, carbs: 25, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Classic French roasted veggie stew.", category: 'vegan' },
+    { name: "Quinoa Stuffed Peppers", calories: 390, protein: 18, fat: 12, carbs: 55, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Complete protein with fiber.", category: 'vegan' },
+    { name: "Vegan Chili Con Carne", calories: 440, protein: 24, fat: 14, carbs: 55, image: "https://images.unsplash.com/photo-1547592115-f96746890d4c?w=800", description: "Bean-based protein rich stew.", category: 'vegan' },
+    { name: "Soba Noodle Salad with Tofu", calories: 410, protein: 22, fat: 14, carbs: 55, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Buckwheat noodles with firm tofu.", category: 'vegan' },
 
-    // --- DAIRY (20 ITEMS) ---
+    // --- DAIRY (30 ITEMS) ---
     { name: "Greek Yogurt Bowl", calories: 320, protein: 28, fat: 12, carbs: 22, image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800", description: "High-protein dairy snack.", category: 'dairy' },
     { name: "Cottage Cheese with Fruit", calories: 210, protein: 25, fat: 4, carbs: 18, image: "https://images.unsplash.com/photo-1481931098730-318b6f976db0?w=800", description: "Slow-digesting casein protein.", category: 'dairy' },
     { name: "Protein Shake (Whey)", calories: 280, protein: 25, fat: 15, carbs: 10, image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=800", description: "Fast-absorbing whey protein.", category: 'dairy' },
@@ -99,8 +129,18 @@ export const MEAL_RECOMMENDATIONS: Meal[] = [
     { name: "Baked Brie with Walnuts", calories: 510, protein: 18, fat: 45, carbs: 12, image: "https://images.unsplash.com/photo-1481931098730-318b6f976db0?w=800", description: "Indulgent high-fat dairy protein.", category: 'dairy' },
     { name: "Greek Yogurt and Peanut Butter", calories: 380, protein: 30, fat: 20, carbs: 22, image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800", description: "Thick and creamy protein bomb.", category: 'dairy' },
     { name: "Grilled Cheese (High Protein Bread)", calories: 450, protein: 26, fat: 24, carbs: 30, image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800", description: "Comforting dairy protein meal.", category: 'dairy' },
+    { name: "Cottage Cheese Pancakes", calories: 340, protein: 28, fat: 12, carbs: 30, image: "https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=800", description: "High-protein breakfast pancakes.", category: 'dairy' },
+    { name: "Greek Yogurt Parfait", calories: 290, protein: 24, fat: 8, carbs: 35, image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800", description: "Layered yogurt with healthy seeds.", category: 'dairy' },
+    { name: "Whipped Ricotta with Berries", calories: 260, protein: 18, fat: 16, carbs: 15, image: "https://images.unsplash.com/photo-1481931098730-318b6f976db0?w=800", description: "Light and airy protein dessert.", category: 'dairy' },
+    { name: "Kefir Breakfast Bowl", calories: 310, protein: 16, fat: 10, carbs: 45, image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=800", description: "Probiotic powerhouse for gut health.", category: 'dairy' },
+    { name: "Halloumi and Watermelon Salad", calories: 380, protein: 18, fat: 25, carbs: 20, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Sweet and salty high-protein salad.", category: 'dairy' },
+    { name: "Feta Stuffed Olives", calories: 220, protein: 8, fat: 20, carbs: 4, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Classic Mediterranean dairy snack.", category: 'dairy' },
+    { name: "Quark with Fresh Herbs", calories: 150, protein: 24, fat: 2, carbs: 8, image: "https://images.unsplash.com/photo-1481931098730-318b6f976db0?w=800", description: "Savory high-protein snack.", category: 'dairy' },
+    { name: "Mozzarella and Basil Skewers", calories: 280, protein: 16, fat: 22, carbs: 4, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Fast and fresh dairy protein.", category: 'dairy' },
+    { name: "Labneh with Cucumber", calories: 190, protein: 14, fat: 12, carbs: 10, image: "https://images.unsplash.com/photo-1574484284002-952d92456975?w=800", description: "Creamy yogurt dip with fiber.", category: 'dairy' },
+    { name: "Greek Yogurt and Walnut Dip", calories: 320, protein: 18, fat: 24, carbs: 12, image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800", description: "Rich and filling dairy snack.", category: 'dairy' },
 
-    // --- SNACK (20 ITEMS) ---
+    // --- SNACK (30 ITEMS) ---
     { name: "Rice Cakes with Almond Butter", calories: 220, protein: 8, fat: 14, carbs: 18, image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800", description: "Light and crunchy clean snack.", category: 'snack' },
     { name: "Energy Balls (Oat and Date)", calories: 280, protein: 10, fat: 12, carbs: 35, image: "https://images.unsplash.com/photo-1515543904379-3d757afe72e4?w=800", description: "Natural sugar energy boost.", category: 'snack' },
     { name: "Baked Apple with Cinnamon", calories: 150, protein: 2, fat: 1, carbs: 38, image: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=800", description: "Sweet and fiber-rich clean treat.", category: 'snack' },
@@ -120,5 +160,15 @@ export const MEAL_RECOMMENDATIONS: Meal[] = [
     { name: "Handful of Pistachios", calories: 160, protein: 6, fat: 13, carbs: 8, image: "https://images.unsplash.com/photo-1511548539487-43b53e5af207?w=800", description: "Lower calorie nut option.", category: 'snack' },
     { name: "Banana with Almonds", calories: 220, protein: 6, fat: 12, carbs: 28, image: "https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=800", description: "Potassium and healthy fat boost.", category: 'snack' },
     { name: "Edamame in the Pod", calories: 140, protein: 12, fat: 6, carbs: 12, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Fun to eat plant protein.", category: 'snack' },
-    { name: "Clean Protein Bar (Homemade)", calories: 280, protein: 20, fat: 12, carbs: 25, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "No added sugar protein boost.", category: 'snack' }
+    { name: "Clean Protein Bar (Homemade)", calories: 280, protein: 20, fat: 12, carbs: 25, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "No added sugar protein boost.", category: 'snack' },
+    { name: "Air-Dried Kale Chips", calories: 80, protein: 4, fat: 6, carbs: 8, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", description: "Crunchy, low-calorie veggie snack.", category: 'snack' },
+    { name: "Roasted Chickpeas (Spicy)", calories: 240, protein: 14, fat: 8, carbs: 35, image: "https://images.unsplash.com/photo-1515543904379-3d757afe72e4?w=800", description: "Fiber and protein-rich vegan snack.", category: 'snack' },
+    { name: "Protein Coffee (Proffee)", calories: 150, protein: 25, fat: 2, carbs: 5, image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=800", description: "Caffeine and protein combined.", category: 'snack' },
+    { name: "Almond Flour Muffins", calories: 260, protein: 10, fat: 22, carbs: 12, image: "https://images.unsplash.com/photo-1510693206972-df098062cb71?w=800", description: "Low-carb clean treat.", category: 'snack' },
+    { name: "Frozen Yogurt Bark", calories: 180, protein: 12, fat: 8, carbs: 20, image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800", description: "Cool and refreshing protein snack.", category: 'snack' },
+    { name: "Cucumber and Turkey Bites", calories: 120, protein: 18, fat: 4, carbs: 4, image: "https://images.unsplash.com/photo-1432139509613-5c4255815697?w=800", description: "Ultra-low carb high-protein snack.", category: 'snack' },
+    { name: "Sunflower Seeds", calories: 190, protein: 8, fat: 16, carbs: 6, image: "https://images.unsplash.com/photo-1511548539487-43b53e5af207?w=800", description: "Vitamin E and healthy fat source.", category: 'snack' },
+    { name: "Baked Peach with Greek Yogurt", calories: 210, protein: 14, fat: 6, carbs: 28, image: "https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=800", description: "Natural sweetness with protein.", category: 'snack' },
+    { name: "Clean Popcorn (Coconut Oil)", calories: 140, protein: 4, fat: 8, carbs: 22, image: "https://images.unsplash.com/photo-1578849278619-e73505e9610f?w=800", description: "High-fiber whole grain snack.", category: 'snack' },
+    { name: "Rice Cakes with Peanut Butter and Berries", calories: 280, protein: 10, fat: 18, carbs: 25, image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800", description: "Classic clean energy snack.", category: 'snack' }
 ];
