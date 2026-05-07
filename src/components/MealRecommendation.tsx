@@ -19,6 +19,7 @@ const CATEGORIES: { id: MealCategory; label: string; icon: any }[] = [
 
 export default function MealRecommendation({ onSelect }: MealRecommendationProps) {
     const [selectedCategory, setSelectedCategory] = useState<MealCategory>('all');
+    const [history, setHistory] = useState<string[]>([]); // Track names of recently shown meals
     
     const filteredMeals = useMemo(() => {
         if (selectedCategory === 'all') return MEAL_RECOMMENDATIONS;
@@ -31,16 +32,33 @@ export default function MealRecommendation({ onSelect }: MealRecommendationProps
     const handleRandomize = () => {
         if (filteredMeals.length <= 1) return;
         setIsAnimating(true);
+        
         setTimeout(() => {
-            const remaining = filteredMeals.filter(m => m.name !== currentMeal.name);
-            const random = remaining[Math.floor(Math.random() * remaining.length)];
+            // Advanced non-repeat algorithm:
+            // 1. Try to find meals that haven't been shown in the last 15 rotations
+            // 2. If all have been shown, clear history for this category and start over
+            let available = filteredMeals.filter(m => !history.includes(m.name));
+            
+            if (available.length === 0) {
+                available = filteredMeals.filter(m => m.name !== currentMeal.name);
+                setHistory([currentMeal.name]); // Reset history but keep current to prevent immediate repeat
+            }
+
+            const random = available[Math.floor(Math.random() * available.length)];
+            
             setCurrentMeal(random);
+            setHistory(prev => {
+                const newHistory = [...prev, random.name];
+                if (newHistory.length > 15) return newHistory.slice(1); // Keep history manageable
+                return newHistory;
+            });
             setIsAnimating(false);
         }, 400);
     };
 
     const handleCategoryChange = (cat: MealCategory) => {
         setSelectedCategory(cat);
+        setHistory([]); // Clear history when switching categories
         const meals = cat === 'all' ? MEAL_RECOMMENDATIONS : MEAL_RECOMMENDATIONS.filter(m => m.category === cat);
         setCurrentMeal(meals[0]);
     };
