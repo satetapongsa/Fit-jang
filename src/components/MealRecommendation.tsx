@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sparkles, RefreshCw, Info, Dumbbell } from 'lucide-react';
+import { Sparkles, RefreshCw, Dumbbell } from 'lucide-react';
 import { Button } from './ui/Button';
 
 export const MOCK_RECOMMENDATIONS = [

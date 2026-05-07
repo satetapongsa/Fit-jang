@@ -1,4 +1,4 @@
-import { LayoutDashboard, CalendarDays, Utensils, User, Plus, Search } from 'lucide-react';
+import { LayoutDashboard, CalendarDays, Utensils, User, Plus } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../utils/cn';
 

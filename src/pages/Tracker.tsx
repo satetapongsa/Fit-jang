@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import Calendar from 'react-calendar';
-import { Plus, Trash2, Utensils, GlassWater, Moon, ChevronLeft, ChevronRight, Activity } from 'lucide-react';
+import { Plus, Trash2, Utensils, GlassWater, Moon, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { useData } from '../context/DataContext';
 import { useUser } from '../context/UserContext';
