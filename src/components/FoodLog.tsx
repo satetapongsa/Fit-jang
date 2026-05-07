@@ -11,37 +11,22 @@ interface FoodLogProps {
 }
 
 export default function FoodLog({ onSelectFood, onCreateCustom, onEditCustom }: FoodLogProps) {
-    const [search, setSearch] = useState('');
     const { customFoods, removeCustomFood } = useData();
-
-    // Combine mock suggestions with custom foods
-    // For now, we prioritze custom foods
-    const allFoods = customFoods;
 
     return (
         <div className="w-full space-y-6">
-            <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" size={20} />
-                <input
-                    type="text"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search your meals..."
-                    className="w-full bg-surfaceHighlight border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white placeholder:text-text-muted focus:outline-none focus:border-primary/50 transition-colors shadow-inner"
-                />
-            </div>
 
             <div className="flex justify-between items-center px-1">
                 <h4 className="text-lg font-bold text-white">Your Meals</h4>
             </div>
 
             <div className="space-y-3">
-                {allFoods.length === 0 && (
+                {customFoods.length === 0 && (
                     <div className="text-center text-text-muted py-12 glass-card rounded-2xl border-dashed">
                         No custom meals yet.
                     </div>
                 )}
-                {allFoods.filter(f => f.name.toLowerCase().includes(search.toLowerCase())).map((food) => (
+                {customFoods.map((food) => (
                     // ... existing meal card code ...
                     <div
                         key={food.id}
