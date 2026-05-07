@@ -48,7 +48,14 @@ export default function MealRecommendation({ onSelect }: MealRecommendationProps
     return (
         <div className="glass-card rounded-[32px] overflow-hidden border border-primary/20 shadow-2xl transition-all duration-500">
             {/* Category Selector */}
-            <div className="px-6 pt-6 pb-2 overflow-x-auto scrollbar-hide">
+            <div 
+                className="px-6 pt-6 pb-2 overflow-x-auto scrollbar-hide select-none active:cursor-grabbing cursor-grab"
+                onWheel={(e) => {
+                    if (e.deltaY !== 0) {
+                        e.currentTarget.scrollLeft += e.deltaY;
+                    }
+                }}
+            >
                 <div className="flex gap-2 min-w-max pb-2">
                     {CATEGORIES.map((cat) => (
                         <button
