@@ -1,5 +1,4 @@
-import { Search, Trash2, Edit2, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { Trash2, Edit2, Plus } from 'lucide-react';
 import { Button } from './ui/Button';
 import { useData } from '../context/DataContext';
 import type { Meal } from '../context/DataContext';
