@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import { useUser } from '../context/UserContext';
 import { useData } from '../context/DataContext';
@@ -38,6 +39,8 @@ export default function Schedule() {
     const { profile, calculateBMI } = useUser();
     const { selectedDate, setSelectedDate, getDataForDate } = useData();
 
+    if (!profile) return <Navigate to="/profile" replace />;
+
     const [viewDate, setViewDate] = useState<Value>(selectedDate);
     const [selectedExercise, setSelectedExercise] = useState<any>(null);
 
@@ -70,99 +73,101 @@ export default function Schedule() {
 
     return (
         <div className="p-5 space-y-6 animate-fade-in pb-32">
-            <header className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-teal-400">
+            <header className="flex justify-between items-center lg:mb-4">
+                <h1 className="text-2xl lg:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-teal-400">
                     Workout Schedule
                 </h1>
-                {/* Export Button (Hidden on strict mobile view to save space, or use icon only) */}
-                {/* <button className="p-2 rounded-full bg-surfaceHighlight text-primary"><CalendarDays size={20}/></button> */}
             </header>
 
-            {/* Calendar Card */}
-            <div className="glass-card rounded-3xl p-4 transition-all hover:border-primary/20">
-                <Calendar
-                    onChange={handleDateChange}
-                    value={viewDate}
-                    tileContent={getTileContent}
-                    className="react-calendar-dark border-none bg-transparent w-full font-sans text-sm"
-                    prevLabel={<ChevronLeft className="w-5 h-5 text-primary" />}
-                    nextLabel={<ChevronRight className="w-5 h-5 text-primary" />}
-                />
-            </div>
-
-            {/* Selected Date Details */}
-            <div className="space-y-4">
-                <div className="flex items-baseline justify-between px-2">
-                    <h2 className="text-lg font-bold text-white">
-                        {displayDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                    </h2>
-                    {selectedWorkout && (
-                        <span className="text-xs font-bold text-primary px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
-                            {selectedWorkout.type.split('(')[0]}
-                        </span>
-                    )}
+            <div className="lg:grid lg:grid-cols-2 lg:gap-10 items-start">
+                {/* Left Column: Calendar */}
+                <div className="space-y-6">
+                    <div className="glass-card rounded-3xl p-4 transition-all hover:border-primary/20">
+                        <Calendar
+                            onChange={handleDateChange}
+                            value={viewDate}
+                            tileContent={getTileContent}
+                            className="react-calendar-dark border-none bg-transparent w-full font-sans text-sm lg:text-base"
+                            prevLabel={<ChevronLeft className="w-5 h-5 text-primary" />}
+                            nextLabel={<ChevronRight className="w-5 h-5 text-primary" />}
+                        />
+                    </div>
                 </div>
 
-                {selectedWorkout ? (
-                    <div className="space-y-4">
-                        {/* Summary Card */}
-                        <div className="p-5 rounded-3xl bg-gradient-to-br from-surfaceHighlight to-surface border border-white/5 relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <Dumbbell size={100} />
-                            </div>
-                            <div className="relative z-10">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className={cn("p-2 rounded-xl", dayData.workoutCompleted ? "bg-green-500/20 text-green-500" : "bg-primary/20 text-primary")}>
-                                        <Dumbbell size={24} />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-bold text-base text-white">{selectedWorkout.type}</h3>
-                                        <p className={cn("text-xs font-medium", dayData.workoutCompleted ? "text-green-500" : "text-text-muted")}>
-                                            {dayData.workoutCompleted ? 'Completed ✅' : 'Estimated: 45-60 min'}
-                                        </p>
-                                    </div>
+                {/* Right Column: Selected Date Details */}
+                <div className="space-y-4 mt-6 lg:mt-0">
+                    <div className="flex items-baseline justify-between px-2">
+                        <h2 className="text-lg lg:text-xl font-bold text-white">
+                            {displayDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                        </h2>
+                        {selectedWorkout && (
+                            <span className="text-xs font-bold text-primary px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+                                {selectedWorkout.type.split('(')[0]}
+                            </span>
+                        )}
+                    </div>
+
+                    {selectedWorkout ? (
+                        <div className="space-y-4">
+                            {/* Summary Card */}
+                            <div className="p-5 lg:p-8 rounded-3xl bg-gradient-to-br from-surfaceHighlight to-surface border border-white/5 relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <Dumbbell size={100} />
                                 </div>
-                            </div>
-                        </div>
-
-                        {/* Exercise List */}
-                        <div className="space-y-3">
-                            {selectedWorkout.exercises.map((ex, index) => (
-                                <div
-                                    key={index}
-                                    onClick={() => setSelectedExercise(ex)}
-                                    className="flex items-center gap-4 p-3 rounded-2xl bg-surface border border-white/5 hover:border-primary/30 transition-all cursor-pointer group active:scale-[0.98]"
-                                >
-                                    <div className="w-12 h-12 rounded-xl bg-surfaceHighlight overflow-hidden shrink-0 relative group-hover:shadow-lg transition-shadow">
-                                        {ex.image ? (
-                                            <img src={ex.image} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" loading="lazy" />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-text-muted"><Dumbbell size={20} /></div>
-                                        )}
-                                    </div>
-
-                                    <div className="flex-1 min-w-0">
-                                        <h4 className="font-semibold text-sm text-white group-hover:text-primary transition-colors truncate">{ex.name}</h4>
-                                        <div className="flex items-center gap-3 mt-1">
-                                            <span className="text-xs text-text-muted font-medium bg-white/5 px-2 py-0.5 rounded-md">{ex.sets} Sets</span>
-                                            <span className="text-xs text-text-muted font-medium bg-white/5 px-2 py-0.5 rounded-md">{ex.reps} Reps</span>
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className={cn("p-2 rounded-xl", dayData.workoutCompleted ? "bg-green-500/20 text-green-500" : "bg-primary/20 text-primary")}>
+                                            <Dumbbell size={24} />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-base lg:text-lg text-white">{selectedWorkout.type}</h3>
+                                            <p className={cn("text-xs font-medium", dayData.workoutCompleted ? "text-green-500" : "text-text-muted")}>
+                                                {dayData.workoutCompleted ? 'Completed ✅' : 'Estimated: 45-60 min'}
+                                            </p>
                                         </div>
                                     </div>
-
-                                    <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-text-muted group-hover:bg-primary group-hover:text-white transition-colors">
-                                        <ChevronRight size={16} />
-                                    </div>
                                 </div>
-                            ))}
+                            </div>
+
+                            {/* Exercise List */}
+                            <div className="grid grid-cols-1 gap-3">
+                                {selectedWorkout.exercises.map((ex, index) => (
+                                    <div
+                                        key={index}
+                                        onClick={() => setSelectedExercise(ex)}
+                                        className="flex items-center gap-4 p-3 lg:p-4 rounded-2xl bg-surface border border-white/5 hover:border-primary/30 transition-all cursor-pointer group active:scale-[0.98]"
+                                    >
+                                        <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-xl bg-surfaceHighlight overflow-hidden shrink-0 relative group-hover:shadow-lg transition-shadow">
+                                            {ex.image ? (
+                                                <img src={ex.image} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" loading="lazy" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-text-muted"><Dumbbell size={20} /></div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex-1 min-w-0">
+                                            <h4 className="font-semibold text-sm lg:text-base text-white group-hover:text-primary transition-colors truncate">{ex.name}</h4>
+                                            <div className="flex items-center gap-3 mt-1">
+                                                <span className="text-xs text-text-muted font-medium bg-white/5 px-2 py-0.5 rounded-md">{ex.sets} Sets</span>
+                                                <span className="text-xs text-text-muted font-medium bg-white/5 px-2 py-0.5 rounded-md">{ex.reps} Reps</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-text-muted group-hover:bg-primary group-hover:text-white transition-colors">
+                                            <ChevronRight size={16} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                ) : (
-                    <div className="py-12 px-6 text-center rounded-3xl border border-dashed border-white/10 bg-white/5">
-                        <Coffee size={40} className="mx-auto text-orange-400 mb-3 opacity-80" />
-                        <h3 className="font-bold text-white mb-1">Rest Day</h3>
-                        <p className="text-sm text-text-muted">No workout scheduled. Take a break!</p>
-                    </div>
-                )}
+                    ) : (
+                        <div className="py-12 px-6 text-center rounded-3xl border border-dashed border-white/10 bg-white/5">
+                            <Coffee size={40} className="mx-auto text-orange-400 mb-3 opacity-80" />
+                            <h3 className="font-bold text-white mb-1">Rest Day</h3>
+                            <p className="text-sm text-text-muted">No workout scheduled. Take a break!</p>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Exercise Detail Modal */}

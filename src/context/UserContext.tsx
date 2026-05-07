@@ -14,6 +14,7 @@ export type UserProfile = {
     waterGoal?: number; // ml, custom goal
     calorieGoal?: number; // kcal, custom goal
     goal: 'general' | 'lose_weight' | 'build_muscle' | 'tone_legs' | 'lose_belly';
+    mbti?: string;
 };
 
 type UserContextType = {

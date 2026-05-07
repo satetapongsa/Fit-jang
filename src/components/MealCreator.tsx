@@ -39,7 +39,7 @@ export default function MealCreator({ onSave, onCancel, initialData }: MealCreat
     };
 
     return (
-        <div className="glass-card p-6 rounded-2xl w-full max-w-sm mx-auto animate-scale-in">
+        <div className="glass-card p-6 lg:p-10 rounded-3xl w-full max-w-2xl mx-auto animate-scale-in">
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Create Custom Meal</h3>
                 <button onClick={onCancel} className="text-text-muted hover:text-white transition-colors">

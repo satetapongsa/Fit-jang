@@ -19,7 +19,7 @@ export default function FoodLog({ onSelectFood, onCreateCustom, onEditCustom }: 
     const allFoods = customFoods;
 
     return (
-        <div className="w-full max-w-md mx-auto space-y-6">
+        <div className="w-full space-y-6">
             <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" size={20} />
                 <input
@@ -47,7 +47,7 @@ export default function FoodLog({ onSelectFood, onCreateCustom, onEditCustom }: 
                 {allFoods.filter(f => f.name.toLowerCase().includes(search.toLowerCase())).map((food) => (
                     <div
                         key={food.id}
-                        className="glass-card p-4 rounded-xl flex justify-between items-center group relative overflow-hidden"
+                        className="glass-card p-4 lg:p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group relative overflow-hidden"
                     >
                         <div onClick={() => onSelectFood({
                             name: food.name,
@@ -55,28 +55,42 @@ export default function FoodLog({ onSelectFood, onCreateCustom, onEditCustom }: 
                             protein: food.protein || 0,
                             fat: food.fat || 0,
                             sugar: food.sugar || 0
-                        })} className="flex-1 cursor-pointer">
-                            <h5 className="font-medium group-hover:text-primary transition-colors">{food.name}</h5>
-                            <span className="text-xs text-text-muted">{food.calories} kcal • P: {food.protein}g • F: {food.fat}g • S: {food.sugar}g</span>
+                        })} className="flex-1 cursor-pointer w-full">
+                            <h5 className="font-bold text-lg group-hover:text-primary transition-colors">{food.name}</h5>
+                            <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1">
+                                <span className="text-sm font-bold text-orange-400">{food.calories} kcal</span>
+                                <span className="text-xs text-text-muted flex items-center gap-1">
+                                    <div className="w-1 h-1 rounded-full bg-text-muted" />
+                                    P: {food.protein}g
+                                </span>
+                                <span className="text-xs text-text-muted flex items-center gap-1">
+                                    <div className="w-1 h-1 rounded-full bg-text-muted" />
+                                    F: {food.fat}g
+                                </span>
+                                <span className="text-xs text-text-muted flex items-center gap-1">
+                                    <div className="w-1 h-1 rounded-full bg-text-muted" />
+                                    C: {food.sugar}g
+                                </span>
+                            </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 self-end sm:self-auto border-t sm:border-t-0 border-white/5 pt-3 sm:pt-0 w-full sm:w-auto justify-end">
                             <button
                                 onClick={(e) => { e.stopPropagation(); onEditCustom(food); }}
-                                className="p-2 hover:bg-white/10 rounded-full text-text-muted hover:text-white transition-colors"
+                                className="p-2.5 hover:bg-white/10 rounded-xl text-text-muted hover:text-white transition-colors"
                             >
-                                <Edit2 size={16} />
+                                <Edit2 size={18} />
                             </button>
                             <button
                                 onClick={(e) => { e.stopPropagation(); removeCustomFood(food.id); }}
-                                className="p-2 hover:bg-red-500/10 rounded-full text-text-muted hover:text-red-500 transition-colors"
+                                className="p-2.5 hover:bg-red-500/10 rounded-xl text-text-muted hover:text-red-500 transition-colors"
                             >
-                                <Trash2 size={16} />
+                                <Trash2 size={18} />
                             </button>
                             <Button
-                                variant="ghost"
+                                variant="primary"
                                 size="icon"
-                                className="bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-full h-8 w-8 ml-2"
+                                className="rounded-xl h-10 w-10 ml-2 shadow-lg shadow-primary/20"
                                 onClick={() => onSelectFood({
                                     name: food.name,
                                     calories: food.calories,
@@ -85,7 +99,7 @@ export default function FoodLog({ onSelectFood, onCreateCustom, onEditCustom }: 
                                     sugar: food.sugar || 0
                                 })}
                             >
-                                <Plus size={18} />
+                                <Plus size={20} />
                             </Button>
                         </div>
                     </div>

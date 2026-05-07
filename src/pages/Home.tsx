@@ -4,14 +4,15 @@ import { ArrowRight, Activity, Calendar, Zap } from 'lucide-react';
 
 export default function Home() {
     return (
-        <div className="flex flex-col h-full justify-center relative overflow-hidden">
-            {/* Background Effects */}
-            <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[100px] pointer-events-none" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-secondary/20 blur-[100px] pointer-events-none" />
+        <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-background w-full">
+            {/* Immersive Background Elements */}
+            <div className="absolute top-0 left-0 w-full h-full">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full animate-pulse" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 blur-[120px] rounded-full animate-pulse delay-700" />
+            </div>
 
-            {/* Hero Section */}
-            <section className="flex-1 flex flex-col items-center justify-center py-12 md:py-24 text-center space-y-8 animate-fade-in z-10 px-6">
-                <div className="space-y-4 max-w-2xl">
+            <div className="relative z-10 w-full max-w-screen-2xl px-6 py-20 flex flex-col items-center text-center space-y-16 animate-fade-in">
+                <div className="space-y-4 max-w-3xl">
                     <span className="inline-block px-3 py-1 rounded-full bg-surfaceHighlight border border-white/10 text-xs font-medium text-primary mb-2 shadow-inner">
                         v2.0 Now Available
                     </span>
@@ -24,15 +25,10 @@ export default function Home() {
                     </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm sm:max-w-md">
+                <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm sm:max-w-md mx-auto">
                     <Link to="/profile" className="w-full">
-                        <Button size="lg" className="w-full group rounded-2xl h-14 text-lg shadow-lg shadow-primary/25" variant="primary">
-                            Get Started <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                    </Link>
-                    <Link to="/dashboard" className="w-full">
-                        <Button variant="glass" size="lg" className="w-full rounded-2xl h-14 text-lg">
-                            Sign In
+                        <Button size="lg" className="w-full group rounded-2xl h-16 text-xl shadow-lg shadow-primary/25" variant="primary">
+                            Get Started Now <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
                         </Button>
                     </Link>
                 </div>
@@ -61,7 +57,7 @@ export default function Home() {
                         <p className="text-text-muted text-sm">Get auto-generated workout routines tailored to your specific goals and body type.</p>
                     </div>
                 </div>
-            </section>
+            </div>
         </div>
     );
 }
