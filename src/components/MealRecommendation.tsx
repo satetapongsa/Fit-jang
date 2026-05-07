@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sparkles, RefreshCw, Info } from 'lucide-react';
+import { Sparkles, RefreshCw, Info, Dumbbell } from 'lucide-react';
 import { Button } from './ui/Button';
 
 export const MOCK_RECOMMENDATIONS = [
@@ -70,12 +70,19 @@ export default function MealRecommendation({ onSelect }: MealRecommendationProps
 
     return (
         <div className="glass-card rounded-[32px] overflow-hidden border border-primary/20 shadow-2xl transition-all duration-500">
-            <div className="relative h-64 overflow-hidden">
+            <div className="relative h-64 overflow-hidden flex items-center justify-center bg-surfaceHighlight">
                 <img 
                     src={currentMeal.image} 
                     alt={currentMeal.name}
                     className={`w-full h-full object-cover transition-all duration-500 ${isAnimating ? 'scale-110 blur-sm opacity-50' : 'scale-100'}`}
+                    onError={(e) => {
+                        e.currentTarget.classList.add('hidden');
+                        e.currentTarget.parentElement?.querySelector('.fallback-icon')?.classList.remove('hidden');
+                    }}
                 />
+                <div className="fallback-icon hidden text-primary/20">
+                    <Dumbbell size={100} />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
                 <div className="absolute top-4 right-4">
                     <Button 

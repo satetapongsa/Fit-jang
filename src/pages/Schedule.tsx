@@ -137,12 +137,21 @@ export default function Schedule() {
                                         onClick={() => setSelectedExercise(ex)}
                                         className="flex items-center gap-4 p-3 lg:p-4 rounded-2xl bg-surface border border-white/5 hover:border-primary/30 transition-all cursor-pointer group active:scale-[0.98]"
                                     >
-                                        <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-xl bg-surfaceHighlight overflow-hidden shrink-0 relative group-hover:shadow-lg transition-shadow">
-                                            {ex.image ? (
-                                                <img src={ex.image} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" loading="lazy" />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-text-muted"><Dumbbell size={20} /></div>
+                                        <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-xl bg-surfaceHighlight overflow-hidden shrink-0 relative group-hover:shadow-lg transition-shadow flex items-center justify-center">
+                                            {ex.image && (
+                                                <img
+                                                    src={ex.image}
+                                                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                                                    loading="lazy"
+                                                    onError={(e) => {
+                                                        e.currentTarget.classList.add('hidden');
+                                                        e.currentTarget.parentElement?.querySelector('.fallback-icon')?.classList.remove('hidden');
+                                                    }}
+                                                />
                                             )}
+                                            <div className={cn("fallback-icon text-text-muted", ex.image ? "hidden" : "")}>
+                                                <Dumbbell size={24} />
+                                            </div>
                                         </div>
 
                                         <div className="flex-1 min-w-0">
@@ -179,12 +188,21 @@ export default function Schedule() {
                 {selectedExercise && (
                     <div className="space-y-6 pb-6">
                         {/* Hero Image */}
-                        <div className="w-full aspect-video bg-black relative">
-                            {selectedExercise.image ? (
-                                <img src={selectedExercise.image} alt={selectedExercise.name} className="w-full h-full object-contain" />
-                            ) : (
-                                <div className="w-full h-full flex items-center justify-center text-text-muted"><Dumbbell size={48} opacity={0.5} /></div>
+                        <div className="w-full aspect-video bg-black relative flex items-center justify-center">
+                            {selectedExercise.image && (
+                                <img
+                                    src={selectedExercise.image}
+                                    alt={selectedExercise.name}
+                                    className="w-full h-full object-contain relative z-10"
+                                    onError={(e) => {
+                                        e.currentTarget.classList.add('hidden');
+                                        e.currentTarget.parentElement?.querySelector('.fallback-icon')?.classList.remove('hidden');
+                                    }}
+                                />
                             )}
+                            <div className={cn("fallback-icon text-text-muted/50", selectedExercise.image ? "hidden" : "")}>
+                                <Dumbbell size={64} />
+                            </div>
                             <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-80"></div>
                         </div>
 
