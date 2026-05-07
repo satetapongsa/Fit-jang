@@ -1,67 +1,20 @@
+import { MEAL_RECOMMENDATIONS } from '../utils/mealData';
 import { useState } from 'react';
 import { Sparkles, RefreshCw, Dumbbell } from 'lucide-react';
 import { Button } from './ui/Button';
-
-export const MOCK_RECOMMENDATIONS = [
-    {
-        name: "Grilled Chicken Breast with Quinoa",
-        calories: 450,
-        protein: 42,
-        fat: 10,
-        carbs: 35,
-        image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&auto=format&fit=crop",
-        description: "Lean protein powerhouse. Quinoa provides complex carbs for sustained energy."
-    },
-    {
-        name: "Salmon Fillet with Steamed Broccoli",
-        calories: 520,
-        protein: 38,
-        fat: 24,
-        carbs: 8,
-        image: "https://images.unsplash.com/photo-1485921325833-c519f76c4927?w=800&auto=format&fit=crop",
-        description: "Rich in Omega-3 fatty acids for heart health and muscle inflammation reduction."
-    },
-    {
-        name: "Lean Beef Stir-Fry",
-        calories: 580,
-        protein: 45,
-        fat: 18,
-        carbs: 42,
-        image: "https://images.unsplash.com/photo-1512058560366-cd2427bb5871?w=800&auto=format&fit=crop",
-        description: "Iron-rich beef paired with colorful veggies for a complete micronutrient profile."
-    },
-    {
-        name: "Greek Yogurt Bowl with Berries & Nuts",
-        calories: 320,
-        protein: 28,
-        fat: 12,
-        carbs: 22,
-        image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&auto=format&fit=crop",
-        description: "Perfect post-workout snack. High in protein and antioxidants."
-    },
-    {
-        name: "Tempeh Buddha Bowl",
-        calories: 480,
-        protein: 32,
-        fat: 16,
-        carbs: 48,
-        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&auto=format&fit=crop",
-        description: "Plant-based protein rich in fiber and essential nutrients."
-    }
-];
 
 interface MealRecommendationProps {
     onSelect: (meal: any) => void;
 }
 
 export default function MealRecommendation({ onSelect }: MealRecommendationProps) {
-    const [currentMeal, setCurrentMeal] = useState(MOCK_RECOMMENDATIONS[0]);
+    const [currentMeal, setCurrentMeal] = useState(MEAL_RECOMMENDATIONS[0]);
     const [isAnimating, setIsAnimating] = useState(false);
 
     const handleRandomize = () => {
         setIsAnimating(true);
         setTimeout(() => {
-            const remaining = MOCK_RECOMMENDATIONS.filter(m => m.name !== currentMeal.name);
+            const remaining = MEAL_RECOMMENDATIONS.filter(m => m.name !== currentMeal.name);
             const random = remaining[Math.floor(Math.random() * remaining.length)];
             setCurrentMeal(random);
             setIsAnimating(false);
