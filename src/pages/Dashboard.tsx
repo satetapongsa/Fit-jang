@@ -62,7 +62,7 @@ export default function Dashboard() {
     if (!profile) return <Navigate to="/profile" replace />;
 
     return (
-        <div className="pb-32 space-y-8 animate-fade-in relative max-w-screen-2xl mx-auto">
+        <div className="pb-32 space-y-8 animate-fade-in relative max-w-7xl mx-auto">
 
             {/* Header / Week Strip */}
             <header className="px-5 pt-4">

@@ -31,20 +31,18 @@ export default function FoodLog({ onSelectFood, onCreateCustom, onEditCustom }: 
                 />
             </div>
 
-            <div className="flex justify-between items-center">
-                <h4 className="text-lg font-semibold">Your Meals</h4>
-                <Button variant="ghost" size="sm" onClick={onCreateCustom} className="text-primary hover:text-primary">
-                    + Create New
-                </Button>
+            <div className="flex justify-between items-center px-1">
+                <h4 className="text-lg font-bold text-white">Your Meals</h4>
             </div>
 
-            <div className="space-y-3 pb-20">
+            <div className="space-y-3">
                 {allFoods.length === 0 && (
-                    <div className="text-center text-text-muted py-8">
-                        No meals yet. Create one to get started!
+                    <div className="text-center text-text-muted py-12 glass-card rounded-2xl border-dashed">
+                        No custom meals yet.
                     </div>
                 )}
                 {allFoods.filter(f => f.name.toLowerCase().includes(search.toLowerCase())).map((food) => (
+                    // ... existing meal card code ...
                     <div
                         key={food.id}
                         className="glass-card p-4 lg:p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group relative overflow-hidden"
@@ -105,6 +103,13 @@ export default function FoodLog({ onSelectFood, onCreateCustom, onEditCustom }: 
                     </div>
                 ))}
             </div>
+
+            <Button 
+                onClick={onCreateCustom} 
+                className="w-full h-14 rounded-2xl bg-surfaceHighlight border border-white/10 text-primary font-bold hover:bg-white/5 transition-all shadow-lg"
+            >
+                <Plus size={20} className="mr-2" /> Create New Meal
+            </Button>
         </div>
     );
 }

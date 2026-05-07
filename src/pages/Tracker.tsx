@@ -79,7 +79,7 @@ export default function Tracker() {
     const currentWaterMl = Math.round(currentData.waterIntake * 250);
 
     return (
-        <div className="p-5 space-y-6 animate-fade-in pb-32 max-w-screen-2xl mx-auto lg:px-10">
+        <div className="p-5 space-y-6 animate-fade-in pb-32 max-w-7xl mx-auto lg:px-10">
             {/* Header */}
             <header className="flex justify-between items-center lg:mb-4">
                 <h1 className="text-2xl lg:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-teal-400">

@@ -70,7 +70,7 @@ export default function FoodDiary() {
 
     return (
         <div className="p-5 min-h-screen pb-32 animate-fade-in relative lg:px-10">
-            <div className="max-w-screen-2xl mx-auto">
+            <div className="max-w-7xl mx-auto">
             {showSuccess && (
                 <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-green-500/90 text-white px-6 py-3 rounded-full shadow-lg backdrop-blur-md animate-fade-in flex items-center gap-2">
                     <div className="w-2 h-2 bg-white rounded-full animate-pulse" />

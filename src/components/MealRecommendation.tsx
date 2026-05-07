@@ -78,12 +78,8 @@ export default function MealRecommendation({ onSelect }: MealRecommendationProps
                     )}
                     onError={(e) => {
                         e.currentTarget.classList.add('hidden');
-                        e.currentTarget.parentElement?.querySelector('.fallback-icon')?.classList.remove('hidden');
                     }}
                 />
-                <div className="fallback-icon hidden text-primary/20">
-                    <Dumbbell size={100} />
-                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
                 <div className="absolute top-4 right-4">
                     <Button 
